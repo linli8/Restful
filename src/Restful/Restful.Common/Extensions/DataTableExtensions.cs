@@ -8,6 +8,7 @@ namespace Restful.Common.Extensions
 {
     public static class DataTableExtensions
     {
+        #region ToObjects<T>
         /// <summary>
         /// 将 DataTable 转换成指定类型的对象列表
         /// </summary>
@@ -30,5 +31,6 @@ namespace Restful.Common.Extensions
 
             return target;
         }
+        #endregion
     }
 }
