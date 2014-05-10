@@ -24,11 +24,6 @@ namespace Restful.Common.Extensions
                 target.Add( dr.ToObject<T>() );
             }
 
-            source.AsEnumerable().Each( s =>
-                {
-                    target.Add( s.ToObject<T>() );
-                } );
-
             return target;
         }
         #endregion
