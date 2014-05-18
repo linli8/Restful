@@ -1,4 +1,4 @@
-Restful.Framework
+Restful.Data - 开源通用多数据库支持的轻量级数据持久层组件
 =================
 
-通用数据持久层组件，支持ORM，支持Linq查询
+
