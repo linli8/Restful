@@ -189,7 +189,7 @@ namespace Restful.Data.MySql
             PageQueryResult result = new PageQueryResult( pageIndex, pageSize );
 
             #region 查询满足条件的条目数量
-            string queryItemCountSql = string.Format( "SELECT COUNT(1) FROM ( {0} ) T1", sql );
+            string queryItemCountSql = string.Format( "SELECT COUNT(*) FROM ( {0} ) T1", sql );
 
             result.ItemCount = this.ExecuteScalar<int>( queryItemCountSql, parameters );
 
@@ -204,11 +204,15 @@ namespace Restful.Data.MySql
             #endregion
 
             #region 查询最终的结果集
-            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT {2}, {3}",
-                sql,
-                orderBy,
-                ( result.PageIndex - 1 ) * result.PageSize,
-                result.PageSize );
+            if( parameters == null )
+            {
+                parameters = new Dictionary<string, object>();
+            }
+
+            parameters.Add( "@LimitFrom", ( result.PageIndex - 1 ) * result.PageSize );
+            parameters.Add( "@LimitCount", result.PageSize );
+
+            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT @LimitFrom, @LimitCount", sql, orderBy );
 
             result.Data = this.ExecuteDataTable( queryItemSql, parameters );
             #endregion

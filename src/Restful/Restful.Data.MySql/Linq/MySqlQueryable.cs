@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using Remotion.Linq;
 using Remotion.Linq.Parsing.Structure;
 

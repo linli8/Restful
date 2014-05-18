@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
-using System.Linq;
 using Remotion.Linq;
-using Restful.Data.MySql.Visitors;
 using Restful.Data.Extensions;
+using Restful.Data.MySql.Visitors;
 
 namespace Restful.Data.MySql.Linq
 {

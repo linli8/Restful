@@ -35,7 +35,6 @@
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -55,6 +54,7 @@
     <Compile Include="SessionExtensions.cs" />
     <Compile Include="SessionFactory.cs" />
     <Compile Include="SessionFactories.cs" />
+    <Compile Include="SessionHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Restful\Restful.csproj">

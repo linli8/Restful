@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using Restful.Data.Common;
-
+﻿
 namespace Restful.Data.Linq
 {
     public interface IExecuteable

@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
-using Restful.Extensions;
-using Restful.Data.MySql.Linq;
-using Restful.Data.MySql.SqlParts;
 using Restful.Data.MySql.Common;
+using Restful.Data.MySql.SqlParts;
+using Restful.Extensions;
 
 namespace Restful.Data.MySql.Visitors
 {

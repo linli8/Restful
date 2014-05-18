@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using Restful.Data.MySql.Common;
 
 namespace Restful.Data.MySql.SqlParts
 {
-    public class MySqlUpdatePartsAggregator
+    internal class MySqlUpdatePartsAggregator
     {
         public string TableName { get; set; }
 
