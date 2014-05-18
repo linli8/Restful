@@ -8,6 +8,11 @@ namespace Restful.Data
 {
     public static class SessionFactory
     {
+        /// <summary>
+        /// 获取或设置 Web.config 或 App.config 文件中配置的默认连接字符串节点名称
+        /// </summary>
+        public static string Default { get; set; }
+
         #region CreateDefaultSession
         /// <summary>
         /// 创建默认的 Session
@@ -15,9 +20,15 @@ namespace Restful.Data
         /// <returns></returns>
         public static ISession CreateDefaultSession()
         {
-            string name = ConfigurationManager.ConnectionStrings[0].Name;
+            if( string.IsNullOrEmpty( Default ) == false )
+            {
+                return CreateSession( Default );
+            }
 
-            return CreateSession( name );
+            string providerName = ConfigurationManager.ConnectionStrings[0].ProviderName;
+            string connectionString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
+
+            return CreateSession( providerName, connectionString );
         }
         #endregion
 
