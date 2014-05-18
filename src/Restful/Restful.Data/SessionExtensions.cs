@@ -50,7 +50,7 @@ namespace Restful.Data
         /// </summary>
         /// <param name="sql">SQL 语句</param>
         /// <returns>DataReader 对象</returns>
-        public static DbDataReader ExecuteDataReader( this ISession session, string sql )
+        public static IDataReader ExecuteDataReader( this ISession session, string sql )
         {
             return session.Provider.ExecuteDataReader( sql, null );
         }
@@ -61,7 +61,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataReader 对象</returns>
-        public static DbDataReader ExecuteDataReader( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static IDataReader ExecuteDataReader( this ISession session, string sql, IDictionary<string, object> parameters )
         {
             return session.Provider.ExecuteDataReader( sql, parameters );
         }
@@ -280,7 +280,7 @@ namespace Restful.Data
         /// <param name="session"></param>
         /// <param name="sql"></param>
         /// <returns></returns>
-        public static IList<T> Find<T>( this ISession session, string sql )
+        public static IEnumerable<T> Find<T>( this ISession session, string sql )
         {
             return session.Provider.Find<T>( sql, null );
         }
@@ -293,7 +293,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static IList<T> Find<T>( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static IEnumerable<T> Find<T>( this ISession session, string sql, IDictionary<string, object> parameters )
         {
             return session.Provider.Find<T>( sql, parameters );
         }

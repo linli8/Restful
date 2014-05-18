@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using Remotion.Linq;
 using Restful.Data.Common;
@@ -31,9 +32,14 @@ namespace Restful.Data.MySql.Linq
 
             SqlCmd.Current = command;
 
-            using( DbDataReader dataReader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
+            using( IDataReader reader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
             {
-                return dataReader.ToObjects<T>();
+                var tuple = reader.GetDeserializerState<T>();
+
+                while( reader.Read() )
+                {
+                    yield return (T)tuple.Func( reader );
+                }
             }
         }
         #endregion
@@ -73,16 +79,18 @@ namespace Restful.Data.MySql.Linq
 
             SqlCmd.Current = command;
 
-            using( DbDataReader dataReader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
+            using( IDataReader reader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
             {
-                if( dataReader.HasRows == false && returnDefaultWhenEmpty )
+                if( reader.NextResult() == false && returnDefaultWhenEmpty )
                 {
                     return default( T );
                 }
 
-                dataReader.Read();
+                var tuple = reader.GetDeserializerState<T>();
 
-                return dataReader.ToObject<T>();
+                reader.Read();
+
+                return (T)tuple.Func( reader );
             }
         }
         #endregion

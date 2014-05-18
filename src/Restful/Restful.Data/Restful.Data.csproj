@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Attributes\AutoIncreaseAttribute.cs" />
     <Compile Include="Common\SqlCmd.cs" />
+    <Compile Include="Dapper\SqlMapper.cs" />
     <Compile Include="Extensions\DataReaderExtensions.cs" />
     <Compile Include="ISession.cs" />
     <Compile Include="ISessionFactory.cs" />

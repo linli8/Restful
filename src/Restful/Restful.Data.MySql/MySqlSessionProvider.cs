@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using MySql.Data.MySqlClient;
@@ -107,7 +108,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteDataReader
-        public DbDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
+        public IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -420,11 +421,16 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Find<T>
-        public IList<T> Find<T>( string sql, IDictionary<string, object> parameters )
+        public IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters )
         {
-            using( DbDataReader dataReader = this.ExecuteDataReader( sql, parameters ) )
+            using( IDataReader reader = this.ExecuteDataReader( sql, parameters ) )
             {
-                return dataReader.ToObjects<T>();
+                var tuple = reader.GetDeserializerState<T>();
+
+                while( reader.Read() )
+                {
+                    yield return (T)tuple.Func( reader );
+                }
             }
         }
         #endregion

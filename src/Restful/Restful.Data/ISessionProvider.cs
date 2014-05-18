@@ -36,7 +36,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataReader 对象</returns>
-        DbDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters );
+        IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters );
         #endregion
 
         #region ExecuteDataTable
@@ -157,7 +157,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        IList<T> Find<T>( string sql, IDictionary<string, object> parameters );
+        IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters );
         #endregion
     }
 }

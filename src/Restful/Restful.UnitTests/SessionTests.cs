@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Restful.Data;
@@ -25,7 +26,7 @@ namespace Restful.UnitTest
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                string sql = "select * from User";
+                string sql = "select * from Person";
 
                 DataTable dt = session.ExecuteDataTable( sql );
 
@@ -153,6 +154,10 @@ namespace Restful.UnitTest
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
+                using( DbTransaction transaction = session.BeginTransaction() )
+                {
+                    transaction.Commit();
+                }
                 var queryable = session.Find<Person>().Where( s => s.Id == 7 )
                     .OrderBy( s => s.CreateTime )
                     .Select( s => new { Id = s.Id, CreateTime = s.CreateTime } );

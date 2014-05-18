@@ -47,7 +47,7 @@ namespace Restful.Data
         /// </summary>
         /// <param name="sql">SQL 语句</param>
         /// <returns>DataReader 对象</returns>
-        public static DbDataReader ExecuteDataReader( string sql )
+        public static IDataReader ExecuteDataReader( string sql )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
@@ -61,7 +61,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataReader 对象</returns>
-        public static DbDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
+        public static IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
@@ -280,7 +280,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static IList<T> Find<T>( string sql )
+        public static IEnumerable<T> Find<T>( string sql )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
@@ -295,7 +295,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static IList<T> Find<T>( string sql, IDictionary<string, object> parameters )
+        public static IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
