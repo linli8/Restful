@@ -2,6 +2,7 @@
 using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
+using Restful.Data.Common;
 using Restful.Data.MySql.Common;
 using Restful.Data.MySql.Linq;
 using Restful.Data.MySql.SqlParts;
@@ -215,11 +216,11 @@ namespace Restful.Data.MySql.Visitors
         /// </summary>
         /// <param name="queryModel"></param>
         /// <returns></returns>
-        internal MySqlSqlCommand Translate( QueryModel queryModel )
+        internal SqlCmd Translate( QueryModel queryModel )
         {
             this.VisitQueryModel( queryModel );
 
-            return new MySqlSqlCommand( queryPartsAggregator.ToString(), parameterAggregator.Parameters );
+            return new SqlCmd( queryPartsAggregator.ToString(), parameterAggregator.Parameters );
         }
         #endregion
     }

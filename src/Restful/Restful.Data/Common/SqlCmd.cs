@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Restful.Data.MySql.Linq
+namespace Restful.Data.Common
 {
-    public class MySqlSqlCommand
+    public class SqlCmd
     {
         /// <summary>
-        /// 查询语句
+        /// 获取或设置当前的 SQL 执行命令
+        /// </summary>
+        public static SqlCmd Current { get; set; }
+
+        /// <summary>
+        /// SQL 语句
         /// </summary>
         public string Sql { get; private set; }
 
         /// <summary>
-        /// 查询所用参数字典
+        /// 参数集合
         /// </summary>
         public IDictionary<string,object> Parameters { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="sql"></param>
-        /// <param name="parameters"></param>
-        public MySqlSqlCommand( string sql, IDictionary<string, object> parameters )
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数集合</param>
+        public SqlCmd( string sql, IDictionary<string, object> parameters )
         {
             this.Sql = sql;
             this.Parameters = parameters;

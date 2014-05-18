@@ -59,18 +59,17 @@ namespace Restful.UnitTest
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                for( int i = 0; i < 100000; i++ )
-                {
-                    Person person = new Person();
+                Person person = new Person();
 
-                    person.Name = "testuser01";
-                    person.Age = 30;
-                    person.Money = 1999.23m;
-                    person.CreateTime = DateTime.Now;
-                    person.IsActive = true;
+                person.Name = "testuser01";
+                person.Age = 30;
+                person.Money = 1999.23m;
+                person.CreateTime = DateTime.Now;
+                person.IsActive = true;
 
-                    session.Insert( person );
-                }
+                session.Insert( person );
+
+                SqlCmd command = SqlCmd.Current;
             }
         }
         #endregion

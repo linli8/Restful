@@ -272,15 +272,19 @@ namespace Restful.Data.MySql
 
             StringBuilder builder = new StringBuilder();
 
-            builder.AppendFormat( "INSERT INTO {0}", Constants.Quote );
-            builder.Append( tableName );
-            builder.AppendFormat( "{0} ( ", Constants.Quote );
+            builder.Append( "INSERT INTO " );
+            builder.AppendFormat( "{0}{1}{0} ", Constants.Quote, tableName );
+            builder.Append( "( " );
             builder.Append( string.Join( ", ", columns ) );
             builder.Append( " ) VALUES ( " );
             builder.Append( string.Join( ", ", parameters.Keys ) );
             builder.Append( " );" );
 
-            return this.ExecuteNonQuery( builder.ToString(), parameters );
+            SqlCmd command = new SqlCmd( builder.ToString(), parameters );
+            
+            SqlCmd.Current = command;
+
+            return this.ExecuteNonQuery( command.Sql, command.Parameters );
         }
         #endregion
 
@@ -340,7 +344,11 @@ namespace Restful.Data.MySql
             builder.Append( string.Join( " AND ", keys ) );
             builder.Append( ";" );
 
-            return this.ExecuteNonQuery( builder.ToString(), parameters );
+            SqlCmd command = new SqlCmd( builder.ToString(), parameters );
+
+            SqlCmd.Current = command;
+
+            return this.ExecuteNonQuery( command.Sql, command.Parameters );
         }
         #endregion
 
@@ -377,7 +385,11 @@ namespace Restful.Data.MySql
             builder.Append( string.Join( " AND ", keys ) );
             builder.Append( ";" );
 
-            return this.ExecuteNonQuery( builder.ToString(), parameters );
+            SqlCmd command = new SqlCmd( builder.ToString(), parameters );
+
+            SqlCmd.Current = command;
+
+            return this.ExecuteNonQuery( command.Sql, command.Parameters );
         }
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
+using Restful.Data.Common;
 using Restful.Data.Entity;
 using Restful.Data.Linq;
 using Restful.Data.MySql.SqlParts;
@@ -74,7 +75,9 @@ namespace Restful.Data.MySql.Linq
         /// </summary>
         public int Execute()
         {
-            MySqlSqlCommand command = new MySqlSqlCommand( this.deletePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+            SqlCmd command = new SqlCmd( this.deletePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+
+            SqlCmd.Current = command;
 
             return this.provider.ExecuteNonQuery( command.Sql, command.Parameters );
         }

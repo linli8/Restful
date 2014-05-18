@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using Remotion.Linq.Parsing.ExpressionTreeVisitors;
 using Restful.Data.Attributes;
+using Restful.Data.Common;
 using Restful.Data.Entity;
 using Restful.Data.Linq;
 using Restful.Data.MySql.Common;
@@ -123,7 +124,9 @@ namespace Restful.Data.MySql.Linq
         #region Execute
         public int Execute()
         {
-            MySqlSqlCommand command = new MySqlSqlCommand( this.updatePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+            SqlCmd command = new SqlCmd( this.updatePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+
+            SqlCmd.Current = command;
 
             return this.provider.ExecuteNonQuery( command.Sql, command.Parameters );
         }

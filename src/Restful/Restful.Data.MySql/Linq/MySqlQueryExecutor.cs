@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Common;
 using Remotion.Linq;
+using Restful.Data.Common;
 using Restful.Data.Extensions;
 using Restful.Data.MySql.Visitors;
 
@@ -9,11 +10,6 @@ namespace Restful.Data.MySql.Linq
     public class MySqlQueryExecutor : IQueryExecutor
     {
         private MySqlSessionProvider provider;
-
-        /// <summary>
-        /// SQL 命令
-        /// </summary>
-        public MySqlSqlCommand SqlCommand { get; private set; }
 
         public MySqlQueryExecutor( MySqlSessionProvider provider )
         {
@@ -33,7 +29,7 @@ namespace Restful.Data.MySql.Linq
 
             var command = queryModelVisitor.Translate( queryModel );
 
-            this.SqlCommand = command;
+            SqlCmd.Current = command;
 
             using( DbDataReader dataReader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
             {
@@ -55,7 +51,7 @@ namespace Restful.Data.MySql.Linq
 
             var command = queryModelVisitor.Translate( queryModel );
 
-            this.SqlCommand = command;
+            SqlCmd.Current = command;
 
             return this.provider.ExecuteScalar<T>( command.Sql, command.Parameters );
         }
@@ -75,7 +71,7 @@ namespace Restful.Data.MySql.Linq
 
             var command = queryModelVisitor.Translate( queryModel );
 
-            this.SqlCommand = command;
+            SqlCmd.Current = command;
 
             using( DbDataReader dataReader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
             {
