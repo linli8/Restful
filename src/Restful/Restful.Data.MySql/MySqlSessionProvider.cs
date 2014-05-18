@@ -1,0 +1,416 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Linq;
+using System.Text;
+using MySql.Data.MySqlClient;
+using Remotion.Linq.Parsing.Structure;
+using Restful.Data.Attributes;
+using Restful.Data.Common;
+using Restful.Data.Entity;
+using Restful.Data.Extensions;
+using Restful.Data.Linq;
+using Restful.Data.MySql.Common;
+using Restful.Data.MySql.Linq;
+using Restful.Extensions;
+
+namespace Restful.Data.MySql
+{
+    public class MySqlSessionProvider : ISessionProvider
+    {
+        private bool disposed;
+        private string connectionStr;
+        protected MySqlConnection connection;
+        protected MySqlTransaction transaction;
+
+        #region MySqlSessionProvider
+        /// <summary>
+        /// 构造函数
+        /// </summary>
+        /// <param name="connectionStr"></param>
+        public MySqlSessionProvider( string connectionStr )
+        {
+            this.connectionStr = connectionStr;
+            this.connection = new MySqlConnection( this.connectionStr );
+            this.connection.Open();
+        }
+        #endregion
+
+        #region Dispose
+        /// <summary>
+        /// 析构函数
+        /// </summary>
+        public void Dispose()
+        {
+            this.Dispose( true );
+            GC.SuppressFinalize( this );
+        }
+
+        protected virtual void Dispose( bool disposing )
+        {
+            if( this.disposed == false )
+            {
+                if( disposing )
+                {
+                    this.connection.Close();
+                }
+            }
+
+            this.disposed = true;
+        }
+        #endregion
+
+        #region PrepareParameter
+        /// <summary>
+        /// PrepareParameter
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="parameters"></param>
+        private void PrepareParameter( MySqlCommand command, IDictionary<string, object> parameters )
+        {
+            if( parameters == null || parameters.Count == 0 )
+            {
+                return;
+            }
+
+            foreach( var item in parameters )
+            {
+                MySqlParameter parameter = command.CreateParameter();
+                parameter.ParameterName = item.Key;
+                parameter.Value = item.Value == null ? DBNull.Value : item.Value;
+                command.Parameters.Add( parameter );
+            }
+        }
+        #endregion
+
+        #region Transaction
+        public DbTransaction BeginTransaction()
+        {
+            return this.transaction = this.connection.BeginTransaction();
+        }
+        #endregion
+
+        #region ExecuteScalar
+        public T ExecuteScalar<T>( string sql, IDictionary<string, object> parameters )
+        {
+            using( MySqlCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = sql;
+                command.Transaction = this.transaction;
+
+                this.PrepareParameter( command, parameters );
+
+                return command.ExecuteScalar().Cast<T>();
+            }
+        }
+        #endregion
+
+        #region ExecuteDataReader
+        public DbDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
+        {
+            using( MySqlCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = sql;
+                command.Transaction = this.transaction;
+
+                this.PrepareParameter( command, parameters );
+
+                return command.ExecuteReader();
+            }
+        }
+        #endregion
+
+        #region ExecuteDataTable
+        public DataTable ExecuteDataTable( string sql, IDictionary<string, object> parameters )
+        {
+            using( MySqlCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = sql;
+                command.Transaction = transaction;
+
+                this.PrepareParameter( command, parameters );
+
+                using( MySqlDataAdapter adapter = new MySqlDataAdapter( command ) )
+                {
+                    DataTable result = new DataTable( "Table1" );
+                    adapter.SelectCommand = command;
+                    adapter.Fill( result );
+                    return result;
+                }
+            }
+        }
+        #endregion
+
+        #region ExecuteDataSet
+        public DataSet ExecuteDataSet( string sql, IDictionary<string, object> parameters )
+        {
+            using( MySqlCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = sql;
+                command.Transaction = this.transaction;
+
+                this.PrepareParameter( command, parameters );
+
+                using( MySqlDataAdapter adapter = new MySqlDataAdapter( command ) )
+                {
+                    DataSet result = new DataSet( "DataSet1" );
+                    adapter.SelectCommand = command;
+                    adapter.Fill( result );
+                    return result;
+                }
+            }
+        }
+        #endregion
+
+        #region ExecuteNonQuery
+        public int ExecuteNonQuery( string sql, IDictionary<string, object> parameters )
+        {
+            using( MySqlCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = sql;
+                command.Transaction = this.transaction;
+
+                this.PrepareParameter( command, parameters );
+
+                return command.ExecuteNonQuery();
+            }
+        }
+        #endregion
+
+        #region ExecutePageQuery
+        public PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IDictionary<string, object> parameters )
+        {
+            if( string.IsNullOrEmpty( orderBy ) )
+            {
+                throw new ArgumentNullException( "orderBy" );
+            }
+
+            PageQueryResult result = new PageQueryResult( pageIndex, pageSize );
+
+            #region 查询满足条件的条目数量
+            string queryItemCountSql = string.Format( "SELECT COUNT(1) FROM ( {0} ) T1", sql );
+
+            result.ItemCount = this.ExecuteScalar<int>( queryItemCountSql, parameters );
+
+            if( result.ItemCount == 0 ) // 如果满足条件的数据条目数量为零，则重置页索引为 1
+            {
+                result.PageIndex = 1;
+            }
+            else if( result.PageIndex > result.PageCount )  // 如果指定的页索引大于查询直接总页数，则重置页索引为总页数
+            {
+                result.PageIndex = result.PageCount;
+            }
+            #endregion
+
+            #region 查询最终的结果集
+            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT {2}, {3}",
+                sql,
+                orderBy,
+                ( result.PageIndex - 1 ) * result.PageSize,
+                result.PageSize );
+
+            result.Data = this.ExecuteDataTable( queryItemSql, parameters );
+            #endregion
+
+            return result;
+        }
+        #endregion
+
+        #region ExecuteStoredProcedure
+        public void ExecuteStoredProcedure( string storedProcedureName, IList<DbParameter> parameters )
+        {
+            using( DbCommand command = connection.CreateCommand() )
+            {
+                command.CommandText = storedProcedureName;
+                command.CommandType = CommandType.StoredProcedure;
+                command.Transaction = this.transaction;
+
+                if( parameters != null && parameters.Count > 0 )
+                {
+                    foreach( DbParameter parameter in parameters )
+                    {
+                        command.Parameters.Add( parameter );
+                    }
+                }
+
+                command.ExecuteNonQuery();
+            }
+        }
+        #endregion
+
+        #region Insert
+        public int Insert( EntityObject @object )
+        {
+            string tableName = @object.GetType().Name;
+
+            IList<string> columns = new List<string>();
+
+            IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+            @object.GetType().GetProperties().Each( s =>
+            {
+                // 非自增字段
+                if( Attribute.GetCustomAttributes( s, typeof( AutoIncreaseAttribute ), true ).Length == 0 )
+                {
+                    if( @object.ChangedProperties.Contains( s.Name ) )
+                    {
+                        columns.Add( string.Format( "{0}{1}{0}", Constants.Quote, s.Name ) );
+
+                        object value = s.EmitGetValue( @object );
+
+                        value = value == null ? DBNull.Value : value;
+
+                        parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, s.Name ), value );
+                    }
+                }
+            } );
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.AppendFormat( "INSERT INTO {0}", Constants.Quote );
+            builder.Append( tableName );
+            builder.AppendFormat( "{0} ( ", Constants.Quote );
+            builder.Append( string.Join( ", ", columns ) );
+            builder.Append( " ) VALUES ( " );
+            builder.Append( string.Join( ", ", parameters.Keys ) );
+            builder.Append( " );" );
+
+            return this.ExecuteNonQuery( builder.ToString(), parameters );
+        }
+        #endregion
+
+        #region GetIdentifier
+        public T GetIdentifier<T>()
+        {
+            return this.ExecuteScalar<T>( "SELECT LAST_INSERT_ID();", null );
+        }
+        #endregion
+
+        #region Update
+        public int Update( EntityObject @object )
+        {
+            string tableName = @object.GetType().Name;
+
+            IList<string> keys = new List<string>();
+            IList<string> columns = new List<string>();
+            IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+            var properties = @object.GetType().GetProperties();
+
+            foreach( var property in properties )
+            {
+                // 非主键字段
+                if( Attribute.GetCustomAttributes( property, typeof( PrimaryKeyAttribute ), true ).Length == 0 )
+                {
+                    if( @object.ChangedProperties.Contains( property.Name ) )
+                    {
+                        columns.Add( string.Format( "{0}{1}{0} = {2}{1}", Constants.Quote, property.Name, Constants.ParameterPrefix ) );
+
+                        object value = property.EmitGetValue( @object );
+
+                        value = value == null ? DBNull.Value : value;
+
+                        parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
+                    }
+                }
+                else
+                {
+                    keys.Add( string.Format( "{0}{1}{0} = {2}{1}", Constants.Quote, property.Name, Constants.ParameterPrefix ) );
+
+                    object value = property.EmitGetValue( @object );
+
+                    value = value == null ? DBNull.Value : value;
+
+                    parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
+                }
+            }
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append( "UPDATE " );
+            builder.AppendFormat( "{0}{1}{0} ", Constants.Quote, tableName );
+            builder.Append( "SET " );
+            builder.Append( string.Join( ", ", columns ) );
+            builder.Append( " WHERE " );
+            builder.Append( string.Join( " AND ", keys ) );
+            builder.Append( ";" );
+
+            return this.ExecuteNonQuery( builder.ToString(), parameters );
+        }
+        #endregion
+
+        #region Delete
+        public int Delete( EntityObject @object )
+        {
+            string tableName = @object.GetType().Name;
+
+            IList<string> keys = new List<string>();
+            IDictionary<string, object> parameters = new Dictionary<string, object>();
+
+            var properties = @object.GetType().GetProperties();
+
+            foreach( var property in properties )
+            {
+                // 非主键字段
+                if( Attribute.GetCustomAttributes( property, typeof( PrimaryKeyAttribute ), true ).Length > 0 )
+                {
+                    keys.Add( string.Format( "{0}{1}{0} = {2}{1}", Constants.Quote, property.Name, Constants.ParameterPrefix ) );
+
+                    object value = property.EmitGetValue( @object );
+
+                    value = value == null ? DBNull.Value : value;
+
+                    parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
+                }
+            }
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append( "DELETE FROM " );
+            builder.AppendFormat( "{0}{1}{0} ", Constants.Quote, tableName );
+            builder.AppendFormat( "WHERE " );
+            builder.Append( string.Join( " AND ", keys ) );
+            builder.Append( ";" );
+
+            return this.ExecuteNonQuery( builder.ToString(), parameters );
+        }
+        #endregion
+
+        #region Update<T>
+        public IUpdateable<T> Update<T>() where T : EntityObject
+        {
+            return new MySqlUpdateable<T>( this );
+        }
+        #endregion
+
+        #region Delete<T>
+        public IDeleteable<T> Delete<T>() where T : EntityObject
+        {
+            return new MySqlDeleteable<T>( this );
+        }
+        #endregion
+
+        #region Find<T>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IQueryable<T> Find<T>()
+        {
+            return new MySqlQueryable<T>( QueryParser.CreateDefault(), new MySqlQueryExecutor( this ) );
+        }
+        #endregion
+
+        #region Find<T>
+        public IList<T> Find<T>( string sql, IDictionary<string, object> parameters )
+        {
+            using( DbDataReader dataReader = this.ExecuteDataReader( sql, parameters ) )
+            {
+                return dataReader.ToObjects<T>();
+            }
+        }
+        #endregion
+    }
+}
