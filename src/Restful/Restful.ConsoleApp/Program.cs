@@ -19,10 +19,9 @@ namespace Restful.ConsoleApp
         {
             SessionFactories.Register<MySqlSessionFactory>();
 
-            ExecuteRestful();
-
             ExecuteDapper();
 
+            ExecuteRestful();
 
             Console.ReadLine();
         }

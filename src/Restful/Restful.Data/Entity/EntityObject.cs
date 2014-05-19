@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Restful.Data.Entity
 {
@@ -7,8 +8,13 @@ namespace Restful.Data.Entity
     /// 实体对象类型基类
     /// </summary>
     [Serializable]
-    public class EntityObject
+    public class EntityObject : INotifyPropertyChanged
     {
+        /// <summary>
+        /// 属性改变事件
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+
         #region Properties
         /// <summary>
         /// 获取或设置已改变的属性集合
@@ -37,6 +43,11 @@ namespace Restful.Data.Entity
             if( this.ChangedProperties.Contains( propertyName ) == false )
             {
                 this.ChangedProperties.Add( propertyName );
+            }
+
+            if( this.PropertyChanged != null )
+            {
+                this.PropertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
             }
         }
         #endregion
