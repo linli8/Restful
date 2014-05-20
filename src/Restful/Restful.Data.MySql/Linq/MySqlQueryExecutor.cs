@@ -81,14 +81,12 @@ namespace Restful.Data.MySql.Linq
 
             using( IDataReader reader = this.provider.ExecuteDataReader( command.Sql.ToString(), command.Parameters ) )
             {
-                if( reader.NextResult() == false && returnDefaultWhenEmpty )
+                if( reader.Read() == false && returnDefaultWhenEmpty )
                 {
                     return default( T );
                 }
 
                 var tuple = reader.GetDeserializerState<T>();
-
-                reader.Read();
 
                 return (T)tuple.Func( reader );
             }

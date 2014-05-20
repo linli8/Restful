@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful", "Restful\Restful.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.UnitTests", "Restful.UnitTests\Restful.UnitTests.csproj", "{8EF03177-EE87-43AF-930D-7CE058945A86}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.NUnitTests", "Restful.NUnitTests\Restful.NUnitTests.csproj", "{11E5DAF2-F969-42E1-8C4F-4156A0856F02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,8 +47,15 @@ Global
 		{8EF03177-EE87-43AF-930D-7CE058945A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8EF03177-EE87-43AF-930D-7CE058945A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8EF03177-EE87-43AF-930D-7CE058945A86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Restful.ConsoleApp\Restful.ConsoleApp.csproj
 	EndGlobalSection
 EndGlobal

@@ -19,63 +19,18 @@ namespace Restful.ConsoleApp
         {
             SessionFactories.Register<MySqlSessionFactory>();
 
-            ExecuteDapper();
+			using (ISession session = SessionFactory.CreateDefaultSession())
+			{
+				var person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
 
-            ExecuteRestful();
+				int i = session.Insert(person);
+
+				int id = session.GetIndentifer<int>();
+
+				person = session.Find<Person>().Where(s => s.Id == id).Single();
+			}
 
             Console.ReadLine();
-        }
-
-        private static void ExecuteRestful()
-        {
-            Stopwatch watch = new Stopwatch();
-
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                for( int i = 0; i < 5; i++ )
-                {
-                    watch.Start();
-
-                    var queryable = session.Find<Person>( string.Format( "select * from Person where Id > {0}", i ) );
-
-                    var persons = queryable.ToList();
-                    //var queryable = from s in session.Find<Person>()
-                    //                select new { Id = s.Id, Name = s.Name };
-
-                    //var persons = queryable.ToList();
-
-                    watch.Stop();
-
-                    Console.WriteLine( "restful:" + watch.ElapsedMilliseconds );
-
-                    watch.Reset();
-                }
-            }
-        }
-
-        private static void ExecuteDapper()
-        {
-            Stopwatch watch = new Stopwatch();
-
-            string connectionStr = ConfigurationManager.ConnectionStrings[0].ConnectionString;
-
-            using( IDbConnection connection = new MySqlConnection( connectionStr ) )
-            {
-                for( int i = 0; i < 5; i++ )
-                {
-                    watch.Start();
-
-                    var queryable = connection.Query<Dapper.Person>( string.Format( "select * from Person where Id > {0}", i ) );
-
-                    var persons = queryable.ToList();
-
-                    watch.Stop();
-
-                    Console.WriteLine( "Dapper:" + watch.ElapsedMilliseconds );
-
-                    watch.Reset();
-                }
-            }
         }
     }
 }

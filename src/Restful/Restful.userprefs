@@ -1,0 +1,36 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Restful.Data.MySql/Linq/MySqlQueryExecutor.cs">
+    <Files>
+      <File FileName="../../../../../../../Library/Frameworks/Mono.framework/Versions/3.2.6/lib/mono/2.0/Microsoft.Common.targets" Line="1" Column="1" />
+      <File FileName="Restful.ConsoleApp/Program.cs" Line="30" Column="1" />
+      <File FileName="../../../Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" Line="86" Column="14" />
+      <File FileName="Restful.Data.MySql/Visitors/MySqlQueryModelVisitor.cs" Line="53" Column="13" />
+      <File FileName="Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" Line="88" Column="17" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True">
+          <Node name="Restful.NUnitTests" expanded="True">
+            <Node name="Restful" expanded="True">
+              <Node name="NUnitTests" expanded="True">
+                <Node name="SessionTest" expanded="True">
+                  <Node name="Insert" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="80" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/restful/src/restful/Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" line="76" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="83" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/restful/src/restful/Restful.ConsoleApp/Program.cs" line="30" column="69" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

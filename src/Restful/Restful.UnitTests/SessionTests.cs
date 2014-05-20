@@ -15,156 +15,77 @@ namespace Restful.UnitTest
     [TestClass]
     public class SessionTests
     {
-        public SessionTests()
+        static SessionTests()
         {
             SessionFactories.Register<MySqlSessionFactory>();
         }
 
-        #region ExecuteDataTable01
-        [TestMethod]
-        public void ExecuteDataTable01()
+        #region 测试 LINQ 查询
+        /// <summary>
+        /// 测试 LINQ 查询
+        /// </summary>
+        [TestMethod()]
+        public void Find()
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                string sql = "select * from Person";
-
-                DataTable dt = session.ExecuteDataTable( sql );
-
-                Assert.AreNotEqual<int>( 0, dt.Rows.Count );
-            }
-        }
-        #endregion
-
-        #region ExecutePageQuery02
-        [TestMethod]
-        public void ExecutePageQuery02()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                string sql01 = "select * from User where CreateTime < @CreateTime";
-
-                IDictionary<string, object> parameters = new Dictionary<string, object>();
-
-                parameters.Add( "@CreateTime", DateTime.Now );
-
-                PageQueryResult result = session.ExecutePageQuery( sql01, 2, 3, "CreateTime DESC", parameters );
-
-                Assert.AreNotEqual<int>( 0, result.Data.Rows.Count );
-            }
-        }
-        #endregion
-
-        #region Insert
-        [TestMethod]
-        public void Insert()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                Person person = new Person();
-
-                person.Name = "testuser01";
-                person.Age = 30;
-                person.Money = 1999.23m;
-                person.CreateTime = DateTime.Now;
-                person.IsActive = true;
+                var person = new Person() { Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
 
                 session.Insert( person );
 
-                SqlCmd command = SqlCmd.Current;
-            }
-        }
-        #endregion
+                int id = session.GetIndentifer<int>();
 
-        #region Update
-        [TestMethod]
-        public void Update()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                Person person = new Person();
+                var queryable = session.Find<Person>().Where( s => s.Id == id );
 
-                person.Id = 2;
-                person.Age = 32;
-                person.Money = 132.23m;
-                person.CreateTime = DateTime.Now;
+                // 测试 Single 函数
+                person = queryable.Single();
 
-                int i = session.Update( person );
+                Assert.AreEqual( "test", person.Name );
+                Assert.AreEqual( 20, person.Age.Value );
+                Assert.AreEqual( 100, person.Money.Value );
+                Assert.AreEqual( true, person.IsActive );
 
-                Assert.AreEqual<int>( 1, i );
-            }
-        }
-        #endregion
+                // 测试 SingleOrDefault 函数
+                person = queryable.SingleOrDefault();
 
-        #region Delete
-        [TestMethod]
-        public void Delete()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                Person person = new Person();
-                
-                person.Id = 2;
+                Assert.AreEqual( "test", person.Name );
+                Assert.AreEqual( 20, person.Age.Value );
+                Assert.AreEqual( 100, person.Money.Value );
+                Assert.AreEqual( true, person.IsActive );
 
-                int i = session.Delete( person );
+                // 测试 First 函数
+                person = queryable.First();
 
-                Assert.AreEqual<int>( 1, i );
-            }
-        }
-        #endregion
+                Assert.AreEqual( "test", person.Name );
+                Assert.AreEqual( 20, person.Age.Value );
+                Assert.AreEqual( 100, person.Money.Value );
+                Assert.AreEqual( true, person.IsActive );
 
-        #region UpdateT
-        [TestMethod]
-        public void UpdateT()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                Person person = new Person();
+                // 测试 FirstOrDefault 函数
+                person = queryable.FirstOrDefault();
 
-                person.Age = 23;
-                person.CreateTime = DateTime.Now;
+                Assert.AreEqual( "test", person.Name );
+                Assert.AreEqual( 20, person.Age.Value );
+                Assert.AreEqual( 100, person.Money.Value );
+                Assert.AreEqual( true, person.IsActive );
 
-                int i = session.Update<Person>()
-                    .Set( person )
-                    .Where( s => s.Id == 3 )
-                    .Execute();
+                // 测试 Count 函数
+                Assert.AreEqual( 1, queryable.Count() );
 
-                Assert.AreNotEqual<int>( 0, i );
-            }
-        }
-        #endregion
+                // 测试 ToList 函数
+                var list = queryable.ToList();
 
-        #region DeleteT
-        [TestMethod]
-        public void DeleteT()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                int i = session.Delete<Person>()
-                    .Where( s => s.Id > 100000 )
-                    .Execute();
+                Assert.AreEqual( 1, list.Count() );
 
-                Assert.AreNotEqual<int>( 0, i );
-            }
-        }
-        #endregion
+                // 测试包含多个 Where 条件
+                queryable = session.Find<Person>()
+                    .Where( s => s.Id == id )
+                    .Where( s => s.Name == "test" )
+                    .Where( s => s.Age == 20 && s.IsActive == true );
 
-        #region FindT
-        [TestMethod]
-        public void FindT()
-        {
-            using( ISession session = SessionFactory.CreateDefaultSession() )
-            {
-                using( DbTransaction transaction = session.BeginTransaction() )
-                {
-                    transaction.Commit();
-                }
-                var queryable = session.Find<Person>().Where( s => s.Id == 7 )
-                    .OrderBy( s => s.CreateTime )
-                    .Select( s => new { Id = s.Id, CreateTime = s.CreateTime } );
+                Assert.AreEqual( 1, queryable.Count() );
 
-                var persons = queryable.ToList();
-
-                Assert.AreNotEqual<int>( 0, persons.Count );
+                Console.WriteLine( SqlCmd.Current.Sql );
             }
         }
         #endregion
