@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using Restful.Data.MySql.Common;
+using Restful.Data.SqlServer.Common;
 
-namespace Restful.Data.MySql.SqlParts
+namespace Restful.Data.SqlServer.SqlParts
 {
-    internal class MySqlUpdatePartsAggregator
+    internal class SqlServerUpdatePartsAggregator
     {
         public string TableName { get; set; }
 
@@ -11,7 +11,7 @@ namespace Restful.Data.MySql.SqlParts
 
         public StringBuilder Where { get; private set; }
 
-        public MySqlUpdatePartsAggregator()
+        public SqlServerUpdatePartsAggregator()
         {
             this.Where = new StringBuilder();
             this.Set = new StringBuilder();

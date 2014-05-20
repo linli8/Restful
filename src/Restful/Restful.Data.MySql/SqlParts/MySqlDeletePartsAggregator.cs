@@ -19,7 +19,7 @@ namespace Restful.Data.MySql.SqlParts
             var builder = new StringBuilder();
 
             builder.Append( "DELETE FROM " );
-            builder.AppendFormat( "{0}{1}{0} ", Constants.Quote, this.TableName );
+            builder.AppendFormat( "{0}{1}{2} ", Constants.LeftQuote, this.TableName, Constants.RightQuote );
 
             if( this.Where.Length > 0 )
             {

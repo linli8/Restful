@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Restful.Data.MySql.Common
+namespace Restful.Data.SqlServer.Common
 {
     /// <summary>
     /// 定义程序集中所用的常量
@@ -13,12 +13,12 @@ namespace Restful.Data.MySql.Common
         /// <summary>
         /// 左引用符号
         /// </summary>
-        public const string LeftQuote = "`";
+        public const string LeftQuote = "[";
 
         /// <summary>
         /// 右引用符号
         /// </summary>
-        public const string RightQuote = "`";
+        public const string RightQuote = "]";
 
         /// <summary>
         /// 参数前缀

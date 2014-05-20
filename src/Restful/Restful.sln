@@ -21,6 +21,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.UnitTests", "Restfu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.NUnitTests", "Restful.NUnitTests\Restful.NUnitTests.csproj", "{11E5DAF2-F969-42E1-8C4F-4156A0856F02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.SqlServer", "Restful.Data.SqlServer\Restful.Data.SqlServer.csproj", "{1722453C-2FFA-4328-AF01-C60D8E6F12B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.Oracle", "Restful.Data.Oracle\Restful.Data.Oracle.csproj", "{3794E904-A181-40F8-A321-3743AFD6AF5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +55,14 @@ Global
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

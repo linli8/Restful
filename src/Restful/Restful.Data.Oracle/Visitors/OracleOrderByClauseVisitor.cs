@@ -4,22 +4,22 @@ using System.Text;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
-using Restful.Data.MySql.Common;
-using Restful.Data.MySql.SqlParts;
+using Restful.Data.Oracle.Common;
+using Restful.Data.Oracle.SqlParts;
 
-namespace Restful.Data.MySql.Visitors
+namespace Restful.Data.Oracle.Visitors
 {
-    internal class MySqlOrderByClauseVisitor : ThrowingExpressionTreeVisitor
+    internal class OracleOrderByClauseVisitor : ThrowingExpressionTreeVisitor
     {
         private readonly StringBuilder builder;
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly OracleParameterAggregator parameterAggregator;
 
-        #region MySqlOrderByClauseVisitor
+        #region OracleOrderByClauseVisitor
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="parameterAggregator"></param>
-        public MySqlOrderByClauseVisitor( MySqlParameterAggregator parameterAggregator )
+        public OracleOrderByClauseVisitor( OracleParameterAggregator parameterAggregator )
         {
             this.builder = new StringBuilder();
             this.parameterAggregator = parameterAggregator;

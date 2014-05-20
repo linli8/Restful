@@ -6,42 +6,42 @@ using Restful.Data.Attributes;
 using Restful.Data.Common;
 using Restful.Data.Entity;
 using Restful.Data.Linq;
-using Restful.Data.MySql.Common;
-using Restful.Data.MySql.SqlParts;
-using Restful.Data.MySql.Visitors;
+using Restful.Data.SqlServer.Common;
+using Restful.Data.SqlServer.SqlParts;
+using Restful.Data.SqlServer.Visitors;
 using Restful.Extensions;
 
-namespace Restful.Data.MySql.Linq
+namespace Restful.Data.SqlServer.Linq
 {
-    public class MySqlUpdateable<T> : IUpdateable<T> where T : EntityObject
+    public class SqlServerUpdateable<T> : IUpdateable<T> where T : EntityObject
     {
         #region Member
         /// <summary>
         /// Session 提供程序
         /// </summary>
-        private MySqlSessionProvider provider;
+        private SqlServerSessionProvider provider;
 
         /// <summary>
         /// 参数聚合器
         /// </summary>
-        private MySqlParameterAggregator parameterAggregator;
+        private SqlServerParameterAggregator parameterAggregator;
 
         /// <summary>
         /// DELETE 语句
         /// </summary>
-        private MySqlUpdatePartsAggregator updatePartsAggregator;
+        private SqlServerUpdatePartsAggregator updatePartsAggregator;
         #endregion
 
-        #region MySqlUpdateable
+        #region SqlServerUpdateable
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="provider"></param>
-        public MySqlUpdateable( MySqlSessionProvider provider )
+        public SqlServerUpdateable( SqlServerSessionProvider provider )
         {
             this.provider = provider;
-            this.parameterAggregator = new MySqlParameterAggregator();
-            this.updatePartsAggregator = new MySqlUpdatePartsAggregator();
+            this.parameterAggregator = new SqlServerParameterAggregator();
+            this.updatePartsAggregator = new SqlServerUpdatePartsAggregator();
             this.updatePartsAggregator.TableName = typeof( T ).Name;
         }
         #endregion
@@ -94,7 +94,7 @@ namespace Restful.Data.MySql.Linq
         {
             Expression expression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees( func );
 
-            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameterAggregator );
+            SqlServerWhereClauseVisitor visitor = new SqlServerWhereClauseVisitor( this.parameterAggregator );
 
             string whereSqlParts = visitor.Translate( expression );
 

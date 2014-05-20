@@ -4,15 +4,15 @@ using System.Data.Common;
 using Remotion.Linq;
 using Restful.Data.Common;
 using Restful.Data.Extensions;
-using Restful.Data.MySql.Visitors;
+using Restful.Data.Oracle.Visitors;
 
-namespace Restful.Data.MySql.Linq
+namespace Restful.Data.Oracle.Linq
 {
-    public class MySqlQueryExecutor : IQueryExecutor
+    public class OracleQueryExecutor : IQueryExecutor
     {
-        private MySqlSessionProvider provider;
+        private OracleSessionProvider provider;
 
-        public MySqlQueryExecutor( MySqlSessionProvider provider )
+        public OracleQueryExecutor( OracleSessionProvider provider )
         {
             this.provider = provider;
         }
@@ -26,7 +26,7 @@ namespace Restful.Data.MySql.Linq
         /// <returns></returns>
         public IEnumerable<T> ExecuteCollection<T>( QueryModel queryModel )
         {
-            MySqlQueryModelVisitor queryModelVisitor = new MySqlQueryModelVisitor();
+            OracleQueryModelVisitor queryModelVisitor = new OracleQueryModelVisitor();
 
             var command = queryModelVisitor.Translate( queryModel );
 
@@ -53,7 +53,7 @@ namespace Restful.Data.MySql.Linq
         /// <returns></returns>
         public T ExecuteScalar<T>( QueryModel queryModel )
         {
-            MySqlQueryModelVisitor queryModelVisitor = new MySqlQueryModelVisitor();
+            OracleQueryModelVisitor queryModelVisitor = new OracleQueryModelVisitor();
 
             var command = queryModelVisitor.Translate( queryModel );
 
@@ -73,7 +73,7 @@ namespace Restful.Data.MySql.Linq
         /// <returns></returns>
         public T ExecuteSingle<T>( QueryModel queryModel, bool returnDefaultWhenEmpty )
         {
-            MySqlQueryModelVisitor queryModelVisitor = new MySqlQueryModelVisitor();
+            OracleQueryModelVisitor queryModelVisitor = new OracleQueryModelVisitor();
 
             var command = queryModelVisitor.Translate( queryModel );
 

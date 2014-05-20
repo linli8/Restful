@@ -4,23 +4,23 @@ using System.Text;
 using Remotion.Linq.Clauses.Expressions;
 using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
-using Restful.Data.MySql.Common;
-using Restful.Data.MySql.SqlParts;
+using Restful.Data.Oracle.Common;
+using Restful.Data.Oracle.SqlParts;
 using Restful.Extensions;
 
-namespace Restful.Data.MySql.Visitors
+namespace Restful.Data.Oracle.Visitors
 {
-    internal class MySqlWhereClauseVisitor : ThrowingExpressionTreeVisitor
+    internal class OracleWhereClauseVisitor : ThrowingExpressionTreeVisitor
     {
         private readonly StringBuilder builder;
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly OracleParameterAggregator parameterAggregator;
 
-        #region MySqlWhereClauseVisitor
+        #region OracleWhereClauseVisitor
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="parameterAggregator"></param>
-        public MySqlWhereClauseVisitor( MySqlParameterAggregator parameterAggregator )
+        public OracleWhereClauseVisitor( OracleParameterAggregator parameterAggregator )
         {
             this.builder = new StringBuilder();
             this.parameterAggregator = parameterAggregator;

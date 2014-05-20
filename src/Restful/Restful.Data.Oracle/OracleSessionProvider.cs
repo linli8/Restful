@@ -5,35 +5,35 @@ using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using MySql.Data.MySqlClient;
+using Oracle.DataAccess.Client;
 using Remotion.Linq.Parsing.Structure;
 using Restful.Data.Attributes;
 using Restful.Data.Common;
 using Restful.Data.Entity;
 using Restful.Data.Extensions;
 using Restful.Data.Linq;
-using Restful.Data.MySql.Common;
-using Restful.Data.MySql.Linq;
+using Restful.Data.Oracle.Common;
+using Restful.Data.Oracle.Linq;
 using Restful.Extensions;
 
-namespace Restful.Data.MySql
+namespace Restful.Data.Oracle
 {
-    public class MySqlSessionProvider : ISessionProvider
+    public class OracleSessionProvider : ISessionProvider
     {
         private bool disposed;
         private string connectionStr;
-        protected MySqlConnection connection;
-        protected MySqlTransaction transaction;
+        protected OracleConnection connection;
+        protected OracleTransaction transaction;
 
-        #region MySqlSessionProvider
+        #region OracleSessionProvider
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="connectionStr"></param>
-        public MySqlSessionProvider( string connectionStr )
+        public OracleSessionProvider( string connectionStr )
         {
             this.connectionStr = connectionStr;
-            this.connection = new MySqlConnection( this.connectionStr );
+            this.connection = new OracleConnection( this.connectionStr );
             this.connection.Open();
         }
         #endregion
@@ -68,7 +68,7 @@ namespace Restful.Data.MySql
         /// </summary>
         /// <param name="command"></param>
         /// <param name="parameters"></param>
-        private void PrepareParameter( MySqlCommand command, IDictionary<string, object> parameters )
+        private void PrepareParameter( OracleCommand command, IDictionary<string, object> parameters )
         {
             if( parameters == null || parameters.Count == 0 )
             {
@@ -77,7 +77,7 @@ namespace Restful.Data.MySql
 
             foreach( var item in parameters )
             {
-                MySqlParameter parameter = command.CreateParameter();
+                OracleParameter parameter = command.CreateParameter();
                 parameter.ParameterName = item.Key;
                 parameter.Value = item.Value == null ? DBNull.Value : item.Value;
                 command.Parameters.Add( parameter );
@@ -95,7 +95,7 @@ namespace Restful.Data.MySql
         #region ExecuteScalar
         public T ExecuteScalar<T>( string sql, IDictionary<string, object> parameters )
         {
-            using( MySqlCommand command = connection.CreateCommand() )
+            using( OracleCommand command = connection.CreateCommand() )
             {
                 command.CommandText = sql;
                 command.Transaction = this.transaction;
@@ -110,7 +110,7 @@ namespace Restful.Data.MySql
         #region ExecuteDataReader
         public IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
         {
-            using( MySqlCommand command = connection.CreateCommand() )
+            using( OracleCommand command = connection.CreateCommand() )
             {
                 command.CommandText = sql;
                 command.Transaction = this.transaction;
@@ -125,14 +125,14 @@ namespace Restful.Data.MySql
         #region ExecuteDataTable
         public DataTable ExecuteDataTable( string sql, IDictionary<string, object> parameters )
         {
-            using( MySqlCommand command = connection.CreateCommand() )
+            using( OracleCommand command = connection.CreateCommand() )
             {
                 command.CommandText = sql;
                 command.Transaction = transaction;
 
                 this.PrepareParameter( command, parameters );
 
-                using( MySqlDataAdapter adapter = new MySqlDataAdapter( command ) )
+                using( OracleDataAdapter adapter = new OracleDataAdapter( command ) )
                 {
                     DataTable result = new DataTable( "Table1" );
                     adapter.SelectCommand = command;
@@ -146,14 +146,14 @@ namespace Restful.Data.MySql
         #region ExecuteDataSet
         public DataSet ExecuteDataSet( string sql, IDictionary<string, object> parameters )
         {
-            using( MySqlCommand command = connection.CreateCommand() )
+            using( OracleCommand command = connection.CreateCommand() )
             {
                 command.CommandText = sql;
                 command.Transaction = this.transaction;
 
                 this.PrepareParameter( command, parameters );
 
-                using( MySqlDataAdapter adapter = new MySqlDataAdapter( command ) )
+                using( OracleDataAdapter adapter = new OracleDataAdapter( command ) )
                 {
                     DataSet result = new DataSet( "DataSet1" );
                     adapter.SelectCommand = command;
@@ -167,7 +167,7 @@ namespace Restful.Data.MySql
         #region ExecuteNonQuery
         public int ExecuteNonQuery( string sql, IDictionary<string, object> parameters )
         {
-            using( MySqlCommand command = connection.CreateCommand() )
+            using( OracleCommand command = connection.CreateCommand() )
             {
                 command.CommandText = sql;
                 command.Transaction = this.transaction;
@@ -397,14 +397,14 @@ namespace Restful.Data.MySql
         #region Update<T>
         public IUpdateable<T> Update<T>() where T : EntityObject
         {
-            return new MySqlUpdateable<T>( this );
+            return new OracleUpdateable<T>( this );
         }
         #endregion
 
         #region Delete<T>
         public IDeleteable<T> Delete<T>() where T : EntityObject
         {
-            return new MySqlDeleteable<T>( this );
+            return new OracleDeleteable<T>( this );
         }
         #endregion
 
@@ -416,7 +416,7 @@ namespace Restful.Data.MySql
         /// <returns></returns>
         public IQueryable<T> Find<T>()
         {
-            return new MySqlQueryable<T>( QueryParser.CreateDefault(), new MySqlQueryExecutor( this ) );
+            return new OracleQueryable<T>( QueryParser.CreateDefault(), new OracleQueryExecutor( this ) );
         }
         #endregion
 

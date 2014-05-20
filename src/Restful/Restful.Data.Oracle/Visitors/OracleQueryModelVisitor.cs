@@ -3,34 +3,34 @@ using Remotion.Linq;
 using Remotion.Linq.Clauses;
 using Remotion.Linq.Clauses.ResultOperators;
 using Restful.Data.Common;
-using Restful.Data.MySql.Common;
-using Restful.Data.MySql.Linq;
-using Restful.Data.MySql.SqlParts;
+using Restful.Data.Oracle.Common;
+using Restful.Data.Oracle.Linq;
+using Restful.Data.Oracle.SqlParts;
 
-namespace Restful.Data.MySql.Visitors
+namespace Restful.Data.Oracle.Visitors
 {
-    public class MySqlQueryModelVisitor : QueryModelVisitorBase
+    public class OracleQueryModelVisitor : QueryModelVisitorBase
     {
         #region Member
         /// <summary>
         /// 查询聚合器
         /// </summary>
-        private readonly MySqlQueryPartsAggregator queryPartsAggregator;
+        private readonly OracleQueryPartsAggregator queryPartsAggregator;
         
         /// <summary>
         /// 参数聚合器
         /// </summary>
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly OracleParameterAggregator parameterAggregator;
         #endregion
 
-        #region MySqlQueryModelVisitor
+        #region OracleQueryModelVisitor
         /// <summary>
         /// 构造方法
         /// </summary>
-        public MySqlQueryModelVisitor()
+        public OracleQueryModelVisitor()
         {
-            this.queryPartsAggregator = new MySqlQueryPartsAggregator();
-            this.parameterAggregator = new MySqlParameterAggregator();
+            this.queryPartsAggregator = new OracleQueryPartsAggregator();
+            this.parameterAggregator = new OracleParameterAggregator();
         }
         #endregion
 
@@ -157,7 +157,7 @@ namespace Restful.Data.MySql.Visitors
         /// <param name="queryModel"></param>
         public override void VisitSelectClause( SelectClause selectClause, QueryModel queryModel )
         {
-            MySqlSelectClauseVisitor visitor = new MySqlSelectClauseVisitor( this.parameterAggregator );
+            OracleSelectClauseVisitor visitor = new OracleSelectClauseVisitor( this.parameterAggregator );
 
             string selectParts = visitor.Translate( selectClause.Selector );
 
@@ -176,7 +176,7 @@ namespace Restful.Data.MySql.Visitors
         /// <param name="index"></param>
         public override void VisitWhereClause( WhereClause whereClause, QueryModel queryModel, int index )
         {
-            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameterAggregator );
+            OracleWhereClauseVisitor visitor = new OracleWhereClauseVisitor( this.parameterAggregator );
 
             string whereParts = visitor.Translate( whereClause.Predicate );
 
@@ -197,7 +197,7 @@ namespace Restful.Data.MySql.Visitors
         {
             foreach( var ordering in orderByClause.Orderings )
             {
-                MySqlOrderByClauseVisitor visitor = new MySqlOrderByClauseVisitor( this.parameterAggregator );
+                OracleOrderByClauseVisitor visitor = new OracleOrderByClauseVisitor( this.parameterAggregator );
 
                 string orderByParts = visitor.Translate( ordering.Expression );
 
