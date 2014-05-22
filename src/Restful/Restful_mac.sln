@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.MySql", "Restf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.NUnitTests", "Restful.NUnitTests\Restful.NUnitTests.csproj", "{11E5DAF2-F969-42E1-8C4F-4156A0856F02}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.Oracle", "Restful.Data.Oracle\Restful.Data.Oracle.csproj", "{C0CF8F4F-8D96-43C8-92A2-35029C643A84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.SqlServer", "Restful.Data.SqlServer\Restful.Data.SqlServer.csproj", "{C0CF8F4F-8D96-43C8-92A2-35029C643A84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,8 +34,16 @@ Global
 		{8A232CEE-9FDB-472F-AFDC-C716B0B4B1CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A232CEE-9FDB-472F-AFDC-C716B0B4B1CA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0CF8F4F-8D96-43C8-92A2-35029C643A84}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ECEDCBF3-7039-4A01-B87A-DA84DA939404}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ECEDCBF3-7039-4A01-B87A-DA84DA939404}.Debug|Any CPU.Build.0 = Debug|Any CPU

@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Text;
+using NUnit.Framework;
 using System;
 using System.Linq;
 using Restful.Data;
@@ -62,6 +63,7 @@ namespace Restful.NUnitTests
         [Test()]
         public void Insert()
         {
+            // 新增时，对象务必使用 EntityProxyGenerator 创建实体代理，否则无法跟踪属性变化
             var person = EntityProxyGenerator.CreateProxy<Person>();
 
             person.Name = "test";
@@ -74,6 +76,7 @@ namespace Restful.NUnitTests
             {
                 int i = session.Insert(person);
 
+                // 输出生成的SQL语句
                 Console.WriteLine(SqlCmd.Current.Sql);
 
                 int id = session.GetIndentifer<int>();
@@ -105,10 +108,12 @@ namespace Restful.NUnitTests
 
                 int id = session.GetIndentifer<int>();
 
+                // Find 方法返回的对象都是原始对象而非代理对象
                 person = session.Find<Person>().Where(s => s.Id == id).Single();
 
                 Console.WriteLine(SqlCmd.Current.Sql);
 
+                // 根据原始对象创建代理对象
                 person = person.ToEntityProxy<Person>();
 
                 person.Name = "test01";
