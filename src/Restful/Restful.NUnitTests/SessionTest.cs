@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Restful.Data;
+using Restful.Data.Extensions;
 using Restful.Data.Common;
 using Restful.Data.MySql;
 using Restful.Data.Entity;
@@ -10,52 +11,21 @@ using Restful.Data.Attributes;
 namespace Restful.NUnitTests
 {
     #region Person
-    public class Person : EntityObject
+    [Serializable]
+    public class Person
     {
-        private int m_Id;
-        private string m_Name;
-        private int? m_Age;
-        private decimal? m_Money;
-        private DateTime m_CreateTime;
-        private bool m_IsActive;
-
-
         [PrimaryKey, AutoIncrease]
-        public int Id
-        {
-            get { return this.m_Id; }
-            set { this.m_Id = value; this.OnPropertyChanged( "Id", value ); }
-        }
+        public virtual int Id { get; set; }
 
-        public string Name
-        {
-            get { return this.m_Name; }
-            set { this.m_Name = value; this.OnPropertyChanged( "Name", value ); }
-        }
+        public virtual string Name { get; set; }
 
-        public int? Age
-        {
-            get { return this.m_Age; }
-            set { this.m_Age = value; this.OnPropertyChanged( "Age", value ); }
-        }
+        public virtual int? Age { get; set; }
 
-        public decimal? Money
-        {
-            get { return this.m_Money; }
-            set { this.m_Money = value; this.OnPropertyChanged( "Money", value ); }
-        }
+        public virtual decimal? Money { get; set; }
 
-        public DateTime CreateTime
-        {
-            get { return this.m_CreateTime; }
-            set { this.m_CreateTime = value; this.OnPropertyChanged( "CreateTime", value ); }
-        }
+        public virtual DateTime CreateTime { get; set; }
 
-        public bool IsActive
-        {
-            get { return this.m_IsActive; }
-            set { this.m_IsActive = value; this.OnPropertyChanged( "IsActive", value ); }
-        }
+        public virtual bool IsActive { get; set; }
     }
     #endregion
 
@@ -67,6 +37,24 @@ namespace Restful.NUnitTests
             SessionFactories.Register<MySqlSessionFactory>();
         }
 
+        #region 测试 ExecuteScalar
+        /// <summary>
+        /// 测试 ExecuteScalar
+        /// </summary>
+        [Test()]
+        public void ExecuteScalar()
+        {
+            using (ISession session = SessionFactory.CreateDefaultSession())
+            {
+                string sql = "select count(*) from Person where Id = ? and CreateTime < ?";
+
+                int count = session.ExecuteScalar<int>(sql, 500, DateTime.Now);
+
+                Assert.AreEqual(1, count);
+            }
+        }
+        #endregion
+
         #region 测试数据新增
         /// <summary>
         /// 测试数据新增
@@ -74,11 +62,19 @@ namespace Restful.NUnitTests
         [Test()]
         public void Insert()
         {
-            var person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+            var person = EntityProxyGenerator.CreateProxy<Person>();
+
+            person.Name = "test";
+            //person.Age = 20;
+            person.Money = 100;
+            person.CreateTime = DateTime.Now;
+            person.IsActive = false;
 
             using (ISession session = SessionFactory.CreateDefaultSession())
             {
                 int i = session.Insert(person);
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 int id = session.GetIndentifer<int>();
 
@@ -95,7 +91,13 @@ namespace Restful.NUnitTests
         [Test()]
         public void Update()
         {
-            var person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+            var person = EntityProxyGenerator.CreateProxy<Person>();
+
+            person.Name = "test";
+            person.Age = 20;
+            person.Money = 100;
+            person.CreateTime = DateTime.Now;
+            person.IsActive = true;
 
             using (ISession session = SessionFactory.CreateDefaultSession())
             {
@@ -105,24 +107,38 @@ namespace Restful.NUnitTests
 
                 person = session.Find<Person>().Where(s => s.Id == id).Single();
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
+                person = person.ToEntityProxy<Person>();
+
                 person.Name = "test01";
                 person.Age = 31;
                 person.Money = 200;
-                person.IsActive = false;
 
                 i = session.Update(person);
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
                 person = session.Find<Person>().Where(s => s.Id == id).Single();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual(1, i);
                 Assert.AreEqual("test01", person.Name);
                 Assert.AreEqual(31, person.Age.Value);
                 Assert.AreEqual(200, person.Money.Value);
-                Assert.AreEqual(false, person.IsActive);
 
-                person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+                person = EntityProxyGenerator.CreateProxy<Person>();
+
+                person.Name = "test";
+                person.Age = 20;
+                person.Money = 100;
+                person.CreateTime = DateTime.Now;
+                person.IsActive = true;
 
                 i = session.Update<Person>().Set(person).Where(s => s.Id == id).Execute();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual(1, i);
                 Assert.AreEqual("test", person.Name);
@@ -140,7 +156,13 @@ namespace Restful.NUnitTests
         [Test()]
         public void Delete()
         {
-            var person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+            var person = EntityProxyGenerator.CreateProxy<Person>();
+
+            person.Name = "test";
+            person.Age = 20;
+            person.Money = 100;
+            person.CreateTime = DateTime.Now;
+            person.IsActive = true;
 
             using (ISession session = SessionFactory.CreateDefaultSession())
             {
@@ -152,12 +174,20 @@ namespace Restful.NUnitTests
 
                 i = session.Delete(person);
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
                 var queryable = session.Find<Person>().Where(s => s.Id == id);
 
                 Assert.AreEqual(1, i);
                 Assert.AreEqual(0, queryable.Count());
 
-                person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+                person = EntityProxyGenerator.CreateProxy<Person>();
+
+                person.Name = "test";
+                person.Age = 20;
+                person.Money = 100;
+                person.CreateTime = DateTime.Now;
+                person.IsActive = true;
 
                 i = session.Insert(person);
 
@@ -166,6 +196,8 @@ namespace Restful.NUnitTests
                 person = session.Find<Person>().Where(s => s.Id == id).Single();
 
                 i = session.Delete<Person>().Where(s => s.Id == id).Execute();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual(1, i);
                 Assert.AreEqual(0, queryable.Count());
@@ -180,7 +212,13 @@ namespace Restful.NUnitTests
         [Test()]
         public void Find()
         {
-            var person = new Person(){ Name = "test", Age = 20, Money = 100, CreateTime = DateTime.Now, IsActive = true };
+            var person = EntityProxyGenerator.CreateProxy<Person>();
+
+            person.Name = "test";
+            person.Age = 20;
+            person.Money = 100;
+            person.CreateTime = DateTime.Now;
+            person.IsActive = true;
 
             using (ISession session = SessionFactory.CreateDefaultSession())
             {
@@ -193,6 +231,8 @@ namespace Restful.NUnitTests
                 // 测试 Single 函数
                 person = queryable.Single();
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
                 Assert.AreEqual("test", person.Name);
                 Assert.AreEqual(20, person.Age.Value);
                 Assert.AreEqual(100, person.Money.Value);
@@ -200,6 +240,8 @@ namespace Restful.NUnitTests
 
                 // 测试 SingleOrDefault 函数
                 person = queryable.SingleOrDefault();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual("test", person.Name);
                 Assert.AreEqual(20, person.Age.Value);
@@ -209,6 +251,8 @@ namespace Restful.NUnitTests
                 // 测试 First 函数
                 person = queryable.First();
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
                 Assert.AreEqual("test", person.Name);
                 Assert.AreEqual(20, person.Age.Value);
                 Assert.AreEqual(100, person.Money.Value);
@@ -216,6 +260,8 @@ namespace Restful.NUnitTests
 
                 // 测试 FirstOrDefault 函数
                 person = queryable.FirstOrDefault();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual("test", person.Name);
                 Assert.AreEqual(20, person.Age.Value);
@@ -225,16 +271,21 @@ namespace Restful.NUnitTests
                 // 测试 Count 函数
                 Assert.AreEqual(1, queryable.Count());
 
+                Console.WriteLine(SqlCmd.Current.Sql);
+
                 // 测试 ToList 函数
                 var list = queryable.ToList();
+
+                Console.WriteLine(SqlCmd.Current.Sql);
 
                 Assert.AreEqual(1, list.Count());
 
                 // 测试包含多个 Where 条件
                 queryable = session.Find<Person>()
                     .Where(s => s.Id == id)
-                    .Where(s => s.Name == "test")
-                    .Where(s => s.Age == 20 && s.IsActive == true);
+                    .Where(s => s.Name.Contains("test"))
+                    .Where(s => s.Age == 20 && s.IsActive == true)
+                    .Skip(0).Take(1);
 
                 Assert.AreEqual(1, queryable.Count());
 

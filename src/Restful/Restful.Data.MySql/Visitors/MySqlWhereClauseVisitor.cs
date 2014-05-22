@@ -7,23 +7,24 @@ using Remotion.Linq.Parsing;
 using Restful.Data.MySql.Common;
 using Restful.Data.MySql.SqlParts;
 using Restful.Extensions;
+using System.Collections.Generic;
 
 namespace Restful.Data.MySql.Visitors
 {
     internal class MySqlWhereClauseVisitor : ThrowingExpressionTreeVisitor
     {
         private readonly StringBuilder builder;
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly IList<object> parameters;
 
         #region MySqlWhereClauseVisitor
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="parameterAggregator"></param>
-        public MySqlWhereClauseVisitor( MySqlParameterAggregator parameterAggregator )
+        public MySqlWhereClauseVisitor( IList<object> parameters )
         {
             this.builder = new StringBuilder();
-            this.parameterAggregator = parameterAggregator;
+            this.parameters = parameters;
         }
         #endregion
 
@@ -155,9 +156,9 @@ namespace Restful.Data.MySql.Visitors
         /// <returns></returns>
         protected override Expression VisitConstantExpression( ConstantExpression expression )
         {
-            string parameterName = this.parameterAggregator.AddParameter( expression.Value );
+            this.parameters.Add( expression.Value );
 
-            this.builder.Append( parameterName );
+            this.builder.Append( "?" );
 
             return expression;
         }

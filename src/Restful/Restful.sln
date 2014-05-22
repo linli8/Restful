@@ -9,7 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.MySql", "Restf
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "References", "References", "{08DD6C08-C133-47F8-BB35-A261C09BD3B2}"
 	ProjectSection(SolutionItems) = preProject
+		References\Castle.Core.dll = References\Castle.Core.dll
+		References\Castle.DynamicProxy2.dll = References\Castle.DynamicProxy2.dll
+		References\EmitMapper.dll = References\EmitMapper.dll
 		References\MySql.Data.dll = References\MySql.Data.dll
+		References\nunit.framework.dll = References\nunit.framework.dll
+		References\Oracle.DataAccess.dll = References\Oracle.DataAccess.dll
 		References\Remotion.Linq.dll = References\Remotion.Linq.dll
 	EndProjectSection
 EndProject
@@ -20,10 +25,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.UnitTests", "Restful.UnitTests\Restful.UnitTests.csproj", "{8EF03177-EE87-43AF-930D-7CE058945A86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.NUnitTests", "Restful.NUnitTests\Restful.NUnitTests.csproj", "{11E5DAF2-F969-42E1-8C4F-4156A0856F02}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.SqlServer", "Restful.Data.SqlServer\Restful.Data.SqlServer.csproj", "{1722453C-2FFA-4328-AF01-C60D8E6F12B4}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restful.Data.Oracle", "Restful.Data.Oracle\Restful.Data.Oracle.csproj", "{3794E904-A181-40F8-A321-3743AFD6AF5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,14 +56,6 @@ Global
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11E5DAF2-F969-42E1-8C4F-4156A0856F02}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1722453C-2FFA-4328-AF01-C60D8E6F12B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3794E904-A181-40F8-A321-3743AFD6AF5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

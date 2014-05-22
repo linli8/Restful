@@ -1,0 +1,21 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Restful.NUnitTests/SessionTest.cs">
+    <Files>
+      <File FileName="Restful.Data.MySql/MySqlSessionFactory.cs" Line="1" Column="1" />
+      <File FileName="Restful.Data.MySql/MySqlSessionProvider.cs" Line="392" Column="1" />
+      <File FileName="Restful.Data/SessionExtensions.cs" Line="288" Column="1" />
+      <File FileName="Restful.NUnitTests/SessionTest.cs" Line="91" Column="17" />
+      <File FileName="Restful.Data/ISessionProvider.cs" Line="13" Column="6" />
+    </Files>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

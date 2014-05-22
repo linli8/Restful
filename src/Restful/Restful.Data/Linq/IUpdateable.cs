@@ -4,14 +4,14 @@ using Restful.Data.Entity;
 
 namespace Restful.Data.Linq
 {
-    public interface IUpdateable<T> : IExecuteable where T : EntityObject
+    public interface IUpdateable<T> : IExecuteable
     {
         /// <summary>
         /// 设置更新字段
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        IUpdateable<T> Set( T @object );
+        IUpdateable<T> Set( object @object );
 
         /// <summary>
         /// 设置过滤条件

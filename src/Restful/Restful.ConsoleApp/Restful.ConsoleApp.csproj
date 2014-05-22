@@ -39,28 +39,26 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\..\工作\技术研究\linq\LinqProvider\References\MySql.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System.Configuration" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dapper\Person.cs" />
-    <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Objects\Person.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Restful.Data.MySql\Restful.Data.MySql.csproj">
-      <Project>{C0CF8F4F-8D96-43C8-92A2-35029C643A84}</Project>
-      <Name>Restful.Data.MySql</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Restful.Data\Restful.Data.csproj">
       <Project>{4BA05EF7-5312-4B37-B0A2-07E68DD05BEA}</Project>
       <Name>Restful.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Restful.Data.MySql\Restful.Data.MySql.csproj">
+      <Project>{C0CF8F4F-8D96-43C8-92A2-35029C643A84}</Project>
+      <Name>Restful.Data.MySql</Name>
     </ProjectReference>
     <ProjectReference Include="..\Restful\Restful.csproj">
       <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
@@ -75,4 +73,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Objects\" />
+  </ItemGroup>
 </Project>

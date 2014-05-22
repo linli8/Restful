@@ -8,52 +8,23 @@ using Restful.Data.Entity;
 
 namespace Restful.UnitTest.Entities
 {
+    
+    #region Person
     [Serializable]
     public class Person : EntityObject
     {
-        private int m_Id;
-        private string m_Name;
-        private int? m_Age;
-        private decimal? m_Money;
-        private DateTime m_CreateTime;
-        private bool m_IsActive;
-
-
         [PrimaryKey, AutoIncrease]
-        public int Id
-        {
-            get { return this.m_Id; }
-            set { this.m_Id = value; this.OnPropertyChanged( "Id", value ); }
-        }
+        public virtual int Id { get; set; }
 
-        public string Name
-        {
-            get { return this.m_Name; }
-            set { this.m_Name = value; this.OnPropertyChanged( "Name", value ); }
-        }
+        public virtual string Name { get; set; }
 
-        public int? Age
-        {
-            get { return this.m_Age; }
-            set { this.m_Age = value; this.OnPropertyChanged( "Age", value ); }
-        }
+        public virtual int? Age { get; set; }
 
-        public decimal? Money
-        {
-            get { return this.m_Money; }
-            set { this.m_Money = value; this.OnPropertyChanged( "Money", value ); }
-        }
+        public virtual decimal? Money { get; set; }
 
-        public DateTime CreateTime
-        {
-            get { return this.m_CreateTime; }
-            set { this.m_CreateTime = value; this.OnPropertyChanged( "CreateTime", value ); }
-        }
+        public virtual DateTime CreateTime { get; set; }
 
-        public bool IsActive
-        {
-            get { return this.m_IsActive; }
-            set { this.m_IsActive = value; this.OnPropertyChanged( "IsActive", value ); }
-        }
+        public virtual bool IsActive { get; set; }
     }
+    #endregion
 }

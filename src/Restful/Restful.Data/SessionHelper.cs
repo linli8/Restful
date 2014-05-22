@@ -184,7 +184,7 @@ namespace Restful.Data
         /// <param name="orderBy">排序字段</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>分页查询结果</returns>
-        public static PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IDictionary<string, object> parameters )
+        public static PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IList<object> parameters )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
@@ -295,7 +295,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters )
+        public static IEnumerable<T> Find<T>( string sql, IList<object> parameters )
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {

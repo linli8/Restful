@@ -26,7 +26,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>查询结果中的第一行第一列的值</returns>
-        T ExecuteScalar<T>( string sql, IDictionary<string, object> parameters );
+        T ExecuteScalar<T>( string sql, IList<object> parameters );
         #endregion
 
         #region ExecuteDataReader
@@ -36,7 +36,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataReader 对象</returns>
-        IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters );
+        IDataReader ExecuteDataReader( string sql, IList<object> parameters );
         #endregion
 
         #region ExecuteDataTable
@@ -46,7 +46,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataTable 对象</returns>
-        DataTable ExecuteDataTable( string sql, IDictionary<string, object> parameters );
+        DataTable ExecuteDataTable( string sql, IList<object> parameters );
         #endregion
 
         #region ExecuteDataSet
@@ -56,7 +56,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataSet 对象</returns>
-        DataSet ExecuteDataSet( string sql, IDictionary<string, object> parameters );
+        DataSet ExecuteDataSet( string sql, IList<object> parameters );
         #endregion
 
         #region ExecuteNonQuery
@@ -66,7 +66,7 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="values">参数列表</param>
         /// <returns>受影响的行数</returns>
-        int ExecuteNonQuery( string sql, IDictionary<string, object> parameters );
+        int ExecuteNonQuery( string sql, IList<object> parameters );
         #endregion
 
         #region ExecutePageQuery
@@ -79,7 +79,7 @@ namespace Restful.Data
         /// <param name="orderBy">排序字段</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>分页查询结果</returns>
-        PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IDictionary<string, object> parameters );
+        PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IList<object> parameters );
         #endregion
 
         #region ExecuteStoredProcedure
@@ -96,7 +96,7 @@ namespace Restful.Data
         /// 将实体对象插入到数据库
         /// </summary>
         /// <param name="object">实体对象</param>
-        int Insert( EntityObject @object );
+        int Insert( object @object );
         #endregion
 
         #region GetIdentifier<T>
@@ -113,7 +113,7 @@ namespace Restful.Data
         /// 将实体对象更新到数据库，调用该方法时实体对象必须具备主键属性
         /// </summary>
         /// <param name="object">实体对象</param>
-        int Update( EntityObject @object );
+        int Update( object @object );
         #endregion
 
         #region Delete
@@ -121,7 +121,7 @@ namespace Restful.Data
         /// 将实体对象从数据库中删除，调用该方法时实体对象必须具备主键属性
         /// </summary>
         /// <param name="object">实体对象</param>
-        int Delete( EntityObject @object );
+        int Delete( object @object );
         #endregion
 
         #region Update<T>
@@ -130,7 +130,7 @@ namespace Restful.Data
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <returns>IUpdator 对象</returns>
-        IUpdateable<T> Update<T>() where T : EntityObject;
+        IUpdateable<T> Update<T>();
         #endregion
 
         #region Delete<T>
@@ -139,7 +139,7 @@ namespace Restful.Data
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <returns>IDeletor 对象</returns>
-        IDeleteable<T> Delete<T>() where T : EntityObject;
+        IDeleteable<T> Delete<T>();
         #endregion
 
         #region Find<T>
@@ -157,7 +157,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters );
+        IEnumerable<T> Find<T>( string sql, IList<object> parameters );
         #endregion
     }
 }

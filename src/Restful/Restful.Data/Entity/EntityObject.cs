@@ -8,7 +8,7 @@ namespace Restful.Data.Entity
     /// 实体对象类型基类
     /// </summary>
     [Serializable]
-    public class EntityObject : INotifyPropertyChanged
+    public class EntityObject : IEntityObject, INotifyPropertyChanged
     {
         /// <summary>
         /// 属性改变事件
@@ -37,8 +37,7 @@ namespace Restful.Data.Entity
         /// 处理实体对象的属性值改变事件
         /// </summary>
         /// <param name="propertyName">属性名</param>
-        /// <param name="value">改变后的值</param>
-        public void OnPropertyChanged( string propertyName, object value )
+        public void OnPropertyChanged( string propertyName )
         {
             if( this.ChangedProperties.Contains( propertyName ) == false )
             {

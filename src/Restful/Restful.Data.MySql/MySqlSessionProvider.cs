@@ -15,6 +15,7 @@ using Restful.Data.Linq;
 using Restful.Data.MySql.Common;
 using Restful.Data.MySql.Linq;
 using Restful.Extensions;
+using System.Reflection;
 
 namespace Restful.Data.MySql
 {
@@ -68,20 +69,43 @@ namespace Restful.Data.MySql
         /// </summary>
         /// <param name="command"></param>
         /// <param name="parameters"></param>
-        private void PrepareParameter( MySqlCommand command, IDictionary<string, object> parameters )
+        private void PrepareParameter( MySqlCommand command, IList<object> parameters )
         {
             if( parameters == null || parameters.Count == 0 )
             {
                 return;
             }
 
-            foreach( var item in parameters )
+            string[] parts = command.CommandText.Split('?');
+
+            if (parts.Length - 1 != parameters.Count)
             {
-                MySqlParameter parameter = command.CreateParameter();
-                parameter.ParameterName = item.Key;
-                parameter.Value = item.Value == null ? DBNull.Value : item.Value;
-                command.Parameters.Add( parameter );
+                throw new ArgumentOutOfRangeException("参数数量与参数值数量不一致。");
             }
+
+            StringBuilder builder = new StringBuilder();
+
+            for (int i = 0; i < parts.Length; i++)
+            {
+                builder.Append(parts[i]);
+
+                if (i < parts.Length - 1)
+                {
+                    string parameterName = string.Format("{0}P{1}", Constants.ParameterPrefix, i);
+                    object value = parameters[i];
+
+                    builder.Append(parameterName);
+
+                    MySqlParameter parameter = command.CreateParameter();
+
+                    parameter.ParameterName = parameterName;
+                    parameter.Value = value == null ? DBNull.Value : value;
+
+                    command.Parameters.Add(parameter);
+                }
+            }
+
+            command.CommandText = builder.ToString();
         }
         #endregion
 
@@ -93,7 +117,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteScalar
-        public T ExecuteScalar<T>( string sql, IDictionary<string, object> parameters )
+        public T ExecuteScalar<T>( string sql, IList<object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -108,7 +132,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteDataReader
-        public IDataReader ExecuteDataReader( string sql, IDictionary<string, object> parameters )
+        public IDataReader ExecuteDataReader( string sql, IList<object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -123,7 +147,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteDataTable
-        public DataTable ExecuteDataTable( string sql, IDictionary<string, object> parameters )
+        public DataTable ExecuteDataTable( string sql, IList<object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -144,7 +168,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteDataSet
-        public DataSet ExecuteDataSet( string sql, IDictionary<string, object> parameters )
+        public DataSet ExecuteDataSet( string sql, IList<object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -165,7 +189,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecuteNonQuery
-        public int ExecuteNonQuery( string sql, IDictionary<string, object> parameters )
+        public int ExecuteNonQuery( string sql, IList<object> parameters )
         {
             using( MySqlCommand command = connection.CreateCommand() )
             {
@@ -180,7 +204,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region ExecutePageQuery
-        public PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IDictionary<string, object> parameters )
+        public PageQueryResult ExecutePageQuery( string sql, int pageIndex, int pageSize, string orderBy, IList<object> parameters )
         {
             if( string.IsNullOrEmpty( orderBy ) )
             {
@@ -207,13 +231,13 @@ namespace Restful.Data.MySql
             #region 查询最终的结果集
             if( parameters == null )
             {
-                parameters = new Dictionary<string, object>();
+                parameters = new List<object>();
             }
 
-            parameters.Add( "@LimitFrom", ( result.PageIndex - 1 ) * result.PageSize );
-            parameters.Add( "@LimitCount", result.PageSize );
+            parameters.Add( ( result.PageIndex - 1 ) * result.PageSize );
+            parameters.Add( result.PageSize );
 
-            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT @LimitFrom, @LimitCount", sql, orderBy );
+            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT ?, ?", sql, orderBy );
 
             result.Data = this.ExecuteDataTable( queryItemSql, parameters );
             #endregion
@@ -245,31 +269,35 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Insert
-        public int Insert( EntityObject @object )
+        public int Insert( object @object )
         {
-            string tableName = @object.GetType().Name;
+            IEntityObject entity = (IEntityObject)@object;
+
+            string tableName = @object.GetType().BaseType.Name;
 
             IList<string> columns = new List<string>();
 
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
+            IList<object> parameters = new List<object>();
 
-            @object.GetType().GetProperties().Each( s =>
+            PropertyInfo[] properties = @object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties)
             {
-                // 非自增字段
-                if( Attribute.GetCustomAttributes( s, typeof( AutoIncreaseAttribute ), true ).Length == 0 )
+                // 忽略自增字段
+                if (Attribute.GetCustomAttributes(property, typeof(AutoIncreaseAttribute), true).Length > 0)
+                    continue;
+
+                if (entity.ChangedProperties.Contains(property.Name))
                 {
-                    if( @object.ChangedProperties.Contains( s.Name ) )
-                    {
-                        columns.Add( string.Format( "{0}{1}{2}", Constants.LeftQuote, s.Name, Constants.RightQuote ) );
+                    columns.Add(string.Format("{0}{1}{2}", Constants.LeftQuote, property.Name, Constants.RightQuote));
 
-                        object value = s.EmitGetValue( @object );
+                    object value = property.EmitGetValue(@object);
 
-                        value = value == null ? DBNull.Value : value;
+                    value = value == null ? DBNull.Value : value;
 
-                        parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, s.Name ), value );
-                    }
+                    parameters.Add(value);
                 }
-            } );
+            }
 
             StringBuilder builder = new StringBuilder();
 
@@ -278,7 +306,17 @@ namespace Restful.Data.MySql
             builder.Append( "( " );
             builder.Append( string.Join( ", ", columns ) );
             builder.Append( " ) VALUES ( " );
-            builder.Append( string.Join( ", ", parameters.Keys ) );
+            for (int i = 0; i < parameters.Count; i++)
+            {
+                if (i == 0)
+                {
+                    builder.Append("?");
+                }
+                else
+                {
+                    builder.Append(", ?");
+                }
+            }
             builder.Append( " );" );
 
             SqlCmd command = new SqlCmd( builder.ToString(), parameters );
@@ -297,43 +335,44 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Update
-        public int Update( EntityObject @object )
+        public int Update( object @object )
         {
-            string tableName = @object.GetType().Name;
+            IEntityObject entity = (IEntityObject)@object;
+
+            string tableName = @object.GetType().BaseType.Name;
 
             IList<string> keys = new List<string>();
             IList<string> columns = new List<string>();
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
+            IList<object> parameters = new List<object>();
 
-            var properties = @object.GetType().GetProperties();
+            var properties = @object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
-            foreach( var property in properties )
+            // 需更新的字段
+            properties.Where(property => Attribute.GetCustomAttributes(property, typeof(PrimaryKeyAttribute), true).Length == 0).Each(property =>
             {
-                // 非主键字段
-                if( Attribute.GetCustomAttributes( property, typeof( PrimaryKeyAttribute ), true ).Length == 0 )
+                if (@entity.ChangedProperties.Contains(property.Name))
                 {
-                    if( @object.ChangedProperties.Contains( property.Name ) )
-                    {
-                        columns.Add( string.Format( "{0}{1}{2} = {3}{1}", Constants.LeftQuote, property.Name, Constants.RightQuote, Constants.ParameterPrefix ) );
+                    columns.Add(string.Format("{0}{1}{2} = ?", Constants.LeftQuote, property.Name, Constants.RightQuote));
 
-                        object value = property.EmitGetValue( @object );
-
-                        value = value == null ? DBNull.Value : value;
-
-                        parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
-                    }
-                }
-                else
-                {
-                    keys.Add( string.Format( "{0}{1}{2} = {3}{1}", Constants.LeftQuote, property.Name, Constants.RightQuote, Constants.ParameterPrefix ) );
-
-                    object value = property.EmitGetValue( @object );
+                    object value = property.EmitGetValue(@object);
 
                     value = value == null ? DBNull.Value : value;
 
-                    parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
+                    parameters.Add(value);
                 }
-            }
+            });
+
+            // 主键字段
+            properties.Where(property => Attribute.GetCustomAttributes(property, typeof(PrimaryKeyAttribute), true).Length > 0).Each(property =>
+            {
+                keys.Add( string.Format( "{0}{1}{2} = ?", Constants.LeftQuote, property.Name, Constants.RightQuote, Constants.ParameterPrefix ) );
+
+                object value = property.EmitGetValue( @object );
+
+                value = value == null ? DBNull.Value : value;
+
+                parameters.Add(value);
+            });
 
             StringBuilder builder = new StringBuilder();
 
@@ -354,27 +393,32 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Delete
-        public int Delete( EntityObject @object )
+        public int Delete( object @object )
         {
             string tableName = @object.GetType().Name;
 
-            IList<string> keys = new List<string>();
-            IDictionary<string, object> parameters = new Dictionary<string, object>();
+            if (@object.GetType().IsAssignableFrom(typeof(IEntityObject)))
+            {
+                tableName = @object.GetType().BaseType.Name;
+            }
 
-            var properties = @object.GetType().GetProperties();
+            IList<string> keys = new List<string>();
+            IList<object> parameters = new List<object>();
+
+            var properties = @object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach( var property in properties )
             {
                 // 非主键字段
                 if( Attribute.GetCustomAttributes( property, typeof( PrimaryKeyAttribute ), true ).Length > 0 )
                 {
-                    keys.Add( string.Format( "{0}{1}{2} = {3}{1}", Constants.LeftQuote, property.Name, Constants.RightQuote, Constants.ParameterPrefix ) );
+                    keys.Add( string.Format( "{0}{1}{2} = ?", Constants.LeftQuote, property.Name, Constants.RightQuote, Constants.ParameterPrefix ) );
 
                     object value = property.EmitGetValue( @object );
 
                     value = value == null ? DBNull.Value : value;
 
-                    parameters.Add( string.Format( "{0}{1}", Constants.ParameterPrefix, property.Name ), value );
+                    parameters.Add(value);
                 }
             }
 
@@ -395,14 +439,14 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Update<T>
-        public IUpdateable<T> Update<T>() where T : EntityObject
+        public IUpdateable<T> Update<T>()
         {
             return new MySqlUpdateable<T>( this );
         }
         #endregion
 
         #region Delete<T>
-        public IDeleteable<T> Delete<T>() where T : EntityObject
+        public IDeleteable<T> Delete<T>()
         {
             return new MySqlDeleteable<T>( this );
         }
@@ -421,7 +465,7 @@ namespace Restful.Data.MySql
         #endregion
 
         #region Find<T>
-        public IEnumerable<T> Find<T>( string sql, IDictionary<string, object> parameters )
+        public IEnumerable<T> Find<T>( string sql, IList<object> parameters )
         {
             using( IDataReader reader = this.ExecuteDataReader( sql, parameters ) )
             {

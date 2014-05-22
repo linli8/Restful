@@ -36,9 +36,22 @@ namespace Restful.Data
         /// 执行带参数的 SQL 语句，返回查询结果中的第一行第一列的值
         /// </summary>
         /// <param name="sql">SQL 语句</param>
+        /// <param name="values">参数值列表</param>
+        /// <returns>查询结果中的第一行第一列的值</returns>
+        public static T ExecuteScalar<T>( this ISession session, string sql, params object[] values )
+        {
+            IList<object> parameters = new List<object>(values);
+
+            return session.Provider.ExecuteScalar<T>(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行带参数的 SQL 语句，返回查询结果中的第一行第一列的值
+        /// </summary>
+        /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>查询结果中的第一行第一列的值</returns>
-        public static T ExecuteScalar<T>( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static T ExecuteScalar<T>( this ISession session, string sql, IList<object> parameters )
         {
             return session.Provider.ExecuteScalar<T>( sql, parameters );
         }
@@ -59,9 +72,22 @@ namespace Restful.Data
         /// 执行带参数 SQL 语句，返回一个 DataReader 对象
         /// </summary>
         /// <param name="sql">SQL 语句</param>
+        /// <param name="values">参数值列表</param>
+        /// <returns>DataReader 对象</returns>
+        public static IDataReader ExecuteDataReader( this ISession session, string sql, params object[] values )
+        {
+            IList<object> parameters = new List<object>(values);
+
+            return session.Provider.ExecuteDataReader(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行带参数 SQL 语句，返回一个 DataReader 对象
+        /// </summary>
+        /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataReader 对象</returns>
-        public static IDataReader ExecuteDataReader( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static IDataReader ExecuteDataReader( this ISession session, string sql, IList<object> parameters )
         {
             return session.Provider.ExecuteDataReader( sql, parameters );
         }
@@ -82,11 +108,24 @@ namespace Restful.Data
         /// 执行带参数 SQL 语句，返回一个 DataTable 对象
         /// </summary>
         /// <param name="sql">SQL 语句</param>
+        /// <param name="values">参数值列表</param>
+        /// <returns>DataTable 对象</returns>
+        public static DataTable ExecuteDataTable( this ISession session, string sql, params object[] values )
+        {
+            IList<object> parameters = new List<object>(values);
+
+            return session.Provider.ExecuteDataTable(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行带参数 SQL 语句，返回一个 DataTable 对象
+        /// </summary>
+        /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataTable 对象</returns>
-        public static DataTable ExecuteDataTable( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static DataTable ExecuteDataTable( this ISession session, string sql, IList<object> parameters )
         {
-            return session.ExecuteDataTable( sql, parameters );
+            return session.Provider.ExecuteDataTable( sql, parameters );
         }
         #endregion
 
@@ -98,7 +137,20 @@ namespace Restful.Data
         /// <returns>DataSet 对象</returns>
         public static DataSet ExecuteDataSet( this ISession session, string sql )
         {
-            return session.ExecuteDataSet( sql, null );
+            return session.Provider.ExecuteDataSet( sql, null );
+        }
+
+        /// <summary>
+        /// 执行带参数 SQL 语句，返回一个 DataTable 对象
+        /// </summary>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="values">参数值列表</param>
+        /// <returns>DataSet 对象</returns>
+        public static DataSet ExecuteDataSet( this ISession session, string sql, params object[] values )
+        {
+            IList<object> parameters = new List<object>(values);
+
+            return session.Provider.ExecuteDataSet(sql, parameters);
         }
 
         /// <summary>
@@ -107,9 +159,9 @@ namespace Restful.Data
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>DataSet 对象</returns>
-        public static DataSet ExecuteDataSet( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static DataSet ExecuteDataSet( this ISession session, string sql, IList<object> parameters )
         {
-            return session.ExecuteDataSet( sql, parameters );
+            return session.Provider.ExecuteDataSet( sql, parameters );
         }
         #endregion
 
@@ -128,9 +180,22 @@ namespace Restful.Data
         /// 执行带参数的非查询 SQL 语句，返回受影响的行数
         /// </summary>
         /// <param name="sql">SQL 语句</param>
-        /// <param name="values">参数列表</param>
+        /// <param name="values">参数值列表</param>
         /// <returns>受影响的行数</returns>
-        public static int ExecuteNonQuery( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static int ExecuteNonQuery( this ISession session, string sql, params object[] values )
+        {
+            IList<object> parameters = new List<object>(values);
+
+            return session.Provider.ExecuteNonQuery(sql, parameters);
+        }
+
+        /// <summary>
+        /// 执行带参数的非查询 SQL 语句，返回受影响的行数
+        /// </summary>
+        /// <param name="sql">SQL 语句</param>
+        /// <param name="parameters">参数列表</param>
+        /// <returns>受影响的行数</returns>
+        public static int ExecuteNonQuery( this ISession session, string sql, IList<object> parameters )
         {
             return session.Provider.ExecuteNonQuery( sql, parameters );
         }
@@ -159,7 +224,7 @@ namespace Restful.Data
         /// <param name="orderBy">排序字段</param>
         /// <param name="parameters">参数列表</param>
         /// <returns>分页查询结果</returns>
-        public static PageQueryResult ExecutePageQuery( this ISession session, string sql, int pageIndex, int pageSize, string orderBy, IDictionary<string, object> parameters )
+        public static PageQueryResult ExecutePageQuery( this ISession session, string sql, int pageIndex, int pageSize, string orderBy, IList<object> parameters )
         {
             return session.Provider.ExecutePageQuery( sql, pageIndex, pageSize, orderBy, parameters );
         }
@@ -193,7 +258,7 @@ namespace Restful.Data
         /// 将实体对象插入到数据库
         /// </summary>
         /// <param name="object">实体对象</param>
-        public static int Insert( this ISession session, EntityObject @object )
+        public static int Insert( this ISession session, object @object )
         {
             return session.Provider.Insert( @object );
         }
@@ -217,7 +282,7 @@ namespace Restful.Data
         /// 将实体对象更新到数据库，调用该方法时实体对象必须具备主键属性
         /// </summary>
         /// <param name="object">实体对象</param>
-        public static int Update( this ISession session, EntityObject @object )
+        public static int Update( this ISession session, object @object )
         {
             return session.Provider.Update( @object );
         }
@@ -228,7 +293,7 @@ namespace Restful.Data
         /// 将实体对象从数据库中删除，调用该方法时实体对象必须具备主键属性
         /// </summary>
         /// <param name="object">实体对象</param>
-        public static int Delete( this ISession session, EntityObject @object )
+        public static int Delete( this ISession session, object @object )
         {
             return session.Provider.Delete( @object );
         }
@@ -242,7 +307,7 @@ namespace Restful.Data
         /// <param name="session">session</param>
         /// <param name="object">实体对象</param>
         /// <returns>更新执行器</returns>
-        public static IUpdateable<T> Update<T>( this ISession session ) where T : EntityObject
+        public static IUpdateable<T> Update<T>( this ISession session )
         {
             return session.Provider.Update<T>();
         }
@@ -255,7 +320,7 @@ namespace Restful.Data
         /// <typeparam name="T">实体类型</typeparam>
         /// <param name="session">session</param>
         /// <returns>删除执行器</returns>
-        public static IDeleteable<T> Delete<T>( this ISession session ) where T : EntityObject
+        public static IDeleteable<T> Delete<T>( this ISession session )
         {
             return session.Provider.Delete<T>();
         }
@@ -293,7 +358,7 @@ namespace Restful.Data
         /// <param name="sql"></param>
         /// <param name="parameters"></param>
         /// <returns></returns>
-        public static IEnumerable<T> Find<T>( this ISession session, string sql, IDictionary<string, object> parameters )
+        public static IEnumerable<T> Find<T>( this ISession session, string sql, IList<object> parameters )
         {
             return session.Provider.Find<T>( sql, parameters );
         }

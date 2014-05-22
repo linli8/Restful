@@ -6,6 +6,7 @@ using Restful.Data.Common;
 using Restful.Data.MySql.Common;
 using Restful.Data.MySql.Linq;
 using Restful.Data.MySql.SqlParts;
+using System.Collections.Generic;
 
 namespace Restful.Data.MySql.Visitors
 {
@@ -20,7 +21,7 @@ namespace Restful.Data.MySql.Visitors
         /// <summary>
         /// 参数聚合器
         /// </summary>
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly IList<object> parameters;
         #endregion
 
         #region MySqlQueryModelVisitor
@@ -30,7 +31,7 @@ namespace Restful.Data.MySql.Visitors
         public MySqlQueryModelVisitor()
         {
             this.queryPartsAggregator = new MySqlQueryPartsAggregator();
-            this.parameterAggregator = new MySqlParameterAggregator();
+            this.parameters = new List<object>();
         }
         #endregion
 
@@ -157,7 +158,7 @@ namespace Restful.Data.MySql.Visitors
         /// <param name="queryModel"></param>
         public override void VisitSelectClause( SelectClause selectClause, QueryModel queryModel )
         {
-            MySqlSelectClauseVisitor visitor = new MySqlSelectClauseVisitor( this.parameterAggregator );
+            MySqlSelectClauseVisitor visitor = new MySqlSelectClauseVisitor( this.parameters );
 
             string selectParts = visitor.Translate( selectClause.Selector );
 
@@ -176,7 +177,7 @@ namespace Restful.Data.MySql.Visitors
         /// <param name="index"></param>
         public override void VisitWhereClause( WhereClause whereClause, QueryModel queryModel, int index )
         {
-            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameterAggregator );
+            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameters );
 
             string whereParts = visitor.Translate( whereClause.Predicate );
 
@@ -197,7 +198,7 @@ namespace Restful.Data.MySql.Visitors
         {
             foreach( var ordering in orderByClause.Orderings )
             {
-                MySqlOrderByClauseVisitor visitor = new MySqlOrderByClauseVisitor( this.parameterAggregator );
+                MySqlOrderByClauseVisitor visitor = new MySqlOrderByClauseVisitor( this.parameters );
 
                 string orderByParts = visitor.Translate( ordering.Expression );
 
@@ -220,7 +221,7 @@ namespace Restful.Data.MySql.Visitors
         {
             this.VisitQueryModel( queryModel );
 
-            return new SqlCmd( queryPartsAggregator.ToString(), parameterAggregator.Parameters );
+            return new SqlCmd( queryPartsAggregator.ToString(), this.parameters );
         }
         #endregion
     }

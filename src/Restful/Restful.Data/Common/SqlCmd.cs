@@ -20,14 +20,14 @@ namespace Restful.Data.Common
         /// <summary>
         /// 参数集合
         /// </summary>
-        public IDictionary<string,object> Parameters { get; private set; }
+        public IList<object> Parameters { get; private set; }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sql">SQL 语句</param>
         /// <param name="parameters">参数集合</param>
-        public SqlCmd( string sql, IDictionary<string, object> parameters )
+        public SqlCmd( string sql, IList<object> parameters )
         {
             this.Sql = sql;
             this.Parameters = parameters;

@@ -4,7 +4,7 @@ using Restful.Data.Entity;
 
 namespace Restful.Data.Linq
 {
-    public interface IDeleteable<T> : IExecuteable where T : EntityObject
+    public interface IDeleteable<T> : IExecuteable
     {
         /// <summary>
         /// 设置过滤条件

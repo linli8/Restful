@@ -6,23 +6,24 @@ using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Parsing;
 using Restful.Data.MySql.Common;
 using Restful.Data.MySql.SqlParts;
+using System.Collections.Generic;
 
 namespace Restful.Data.MySql.Visitors
 {
     internal class MySqlOrderByClauseVisitor : ThrowingExpressionTreeVisitor
     {
         private readonly StringBuilder builder;
-        private readonly MySqlParameterAggregator parameterAggregator;
+        private readonly IList<object> parameters;
 
         #region MySqlOrderByClauseVisitor
         /// <summary>
         /// 构造函数
         /// </summary>
         /// <param name="parameterAggregator"></param>
-        public MySqlOrderByClauseVisitor( MySqlParameterAggregator parameterAggregator )
+        public MySqlOrderByClauseVisitor( IList<object> parameters )
         {
             this.builder = new StringBuilder();
-            this.parameterAggregator = parameterAggregator;
+            this.parameters = parameters;
         }
         #endregion
 

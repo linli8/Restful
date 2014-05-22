@@ -10,10 +10,11 @@ using Restful.Data.MySql.Common;
 using Restful.Data.MySql.SqlParts;
 using Restful.Data.MySql.Visitors;
 using Restful.Extensions;
+using System.Collections.Generic;
 
 namespace Restful.Data.MySql.Linq
 {
-    public class MySqlUpdateable<T> : IUpdateable<T> where T : EntityObject
+    public class MySqlUpdateable<T> : IUpdateable<T>
     {
         #region Member
         /// <summary>
@@ -24,7 +25,7 @@ namespace Restful.Data.MySql.Linq
         /// <summary>
         /// 参数聚合器
         /// </summary>
-        private MySqlParameterAggregator parameterAggregator;
+        private IList<object> parameters;
 
         /// <summary>
         /// DELETE 语句
@@ -40,7 +41,7 @@ namespace Restful.Data.MySql.Linq
         public MySqlUpdateable( MySqlSessionProvider provider )
         {
             this.provider = provider;
-            this.parameterAggregator = new MySqlParameterAggregator();
+            this.parameters = new List<object>();
             this.updatePartsAggregator = new MySqlUpdatePartsAggregator();
             this.updatePartsAggregator.TableName = typeof( T ).Name;
         }
@@ -52,8 +53,10 @@ namespace Restful.Data.MySql.Linq
         /// </summary>
         /// <param name="object"></param>
         /// <returns></returns>
-        public IUpdateable<T> Set( T @object )
+        public IUpdateable<T> Set( object @object )
         {
+            IEntityObject entity = (IEntityObject)@object;
+
             this.updatePartsAggregator.Set.Clear();
 
             PropertyInfo[] properties = @object.GetType().GetProperties();
@@ -62,21 +65,21 @@ namespace Restful.Data.MySql.Linq
             {
                 if( Attribute.GetCustomAttributes( property, typeof( PrimaryKeyAttribute ), true ).Length > 0 ) continue;
 
-                if( @object.ChangedProperties.Contains( property.Name ) == false ) continue;
+                if( entity.ChangedProperties.Contains( property.Name ) == false ) continue;
 
                 object value = property.EmitGetValue( @object );
 
                 value = value == null ? DBNull.Value : value;
 
-                string parameterName = this.parameterAggregator.AddParameter( value );
+                this.parameters.Add( value );
 
                 if( this.updatePartsAggregator.Set.Length == 0 )
                 {
-                    this.updatePartsAggregator.Set.AppendFormat( "{0}{1}{2} = {3}", Constants.LeftQuote, property.Name, Constants.RightQuote, parameterName );
+                    this.updatePartsAggregator.Set.AppendFormat("{0}{1}{2} = ?", Constants.LeftQuote, property.Name, Constants.RightQuote);
                 }
                 else
                 {
-                    this.updatePartsAggregator.Set.AppendFormat( ", {0}{1}{2} = {3}", Constants.LeftQuote, property.Name, Constants.RightQuote, parameterName );
+                    this.updatePartsAggregator.Set.AppendFormat(", {0}{1}{2} = ?", Constants.LeftQuote, property.Name, Constants.RightQuote);
                 }
             }
 
@@ -94,7 +97,7 @@ namespace Restful.Data.MySql.Linq
         {
             Expression expression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees( func );
 
-            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameterAggregator );
+            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameters );
 
             string whereSqlParts = visitor.Translate( expression );
 
@@ -124,7 +127,7 @@ namespace Restful.Data.MySql.Linq
         #region Execute
         public int Execute()
         {
-            SqlCmd command = new SqlCmd( this.updatePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+            SqlCmd command = new SqlCmd( this.updatePartsAggregator.ToString(), this.parameters );
 
             SqlCmd.Current = command;
 

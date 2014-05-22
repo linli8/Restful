@@ -6,10 +6,11 @@ using Restful.Data.Entity;
 using Restful.Data.Linq;
 using Restful.Data.MySql.SqlParts;
 using Restful.Data.MySql.Visitors;
+using System.Collections.Generic;
 
 namespace Restful.Data.MySql.Linq
 {
-    public class MySqlDeleteable<T> : IDeleteable<T> where T : EntityObject
+    public class MySqlDeleteable<T> : IDeleteable<T>
     {
         #region Member
         /// <summary>
@@ -20,7 +21,7 @@ namespace Restful.Data.MySql.Linq
         /// <summary>
         /// 参数聚合器
         /// </summary>
-        private MySqlParameterAggregator parameterAggregator;
+        private IList<object> parameters;
 
         /// <summary>
         /// DELETE 语句
@@ -36,7 +37,7 @@ namespace Restful.Data.MySql.Linq
         public MySqlDeleteable( MySqlSessionProvider provider)
         {
             this.provider = provider;
-            this.parameterAggregator = new MySqlParameterAggregator();
+            this.parameters = new List<object>();
             this.deletePartsAggregator = new MySqlDeletePartsAggregator();
             this.deletePartsAggregator.TableName = typeof( T ).Name;
         }
@@ -52,7 +53,7 @@ namespace Restful.Data.MySql.Linq
         {
             Expression expression = PartialEvaluatingExpressionTreeVisitor.EvaluateIndependentSubtrees( func );
 
-            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameterAggregator );
+            MySqlWhereClauseVisitor visitor = new MySqlWhereClauseVisitor( this.parameters );
 
             string whereSqlParts = visitor.Translate( expression );
 
@@ -75,7 +76,7 @@ namespace Restful.Data.MySql.Linq
         /// </summary>
         public int Execute()
         {
-            SqlCmd command = new SqlCmd( this.deletePartsAggregator.ToString(), this.parameterAggregator.Parameters );
+            SqlCmd command = new SqlCmd( this.deletePartsAggregator.ToString(), this.parameters );
 
             SqlCmd.Current = command;
 

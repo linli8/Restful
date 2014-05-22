@@ -39,6 +39,24 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\packages\NLog.1.0.0.505\lib\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.1.2.0\lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.log4netIntegration">
+      <HintPath>..\packages\Castle.Core.1.2.0\lib\Castle.Services.Logging.log4netIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Services.Logging.NLogIntegration">
+      <HintPath>..\packages\Castle.Core.1.2.0\lib\Castle.Services.Logging.NLogIntegration.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2">
+      <HintPath>..\packages\Castle.DynamicProxy.2.2.0\lib\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\AutoIncreaseAttribute.cs" />
@@ -59,12 +77,12 @@
     <Compile Include="SessionFactory.cs" />
     <Compile Include="SessionFactories.cs" />
     <Compile Include="SessionHelper.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Restful\Restful.csproj">
-      <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
-      <Name>Restful</Name>
-    </ProjectReference>
+    <Compile Include="Entity\IEntityObject.cs" />
+    <Compile Include="Entity\EntityInterceptor.cs" />
+    <Compile Include="Entity\EntityInterceptorFilter.cs" />
+    <Compile Include="Entity\EntityInterceptorSelector.cs" />
+    <Compile Include="Entity\EntityProxyGenerator.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -75,4 +93,13 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Restful\Restful.csproj">
+      <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
+      <Name>Restful</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
