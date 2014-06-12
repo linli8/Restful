@@ -67,12 +67,12 @@ namespace Restful.Data.SqlServer
             #region 查询最终的结果集
 
             string limitFrom = string.Format( "{0}LimitFrom", Constants.ParameterPrefix );
-            string limitCount = string.Format( "{0}LimitCount", Constants.ParameterPrefix );
+            string limitTo = string.Format( "{0}LimitTo", Constants.ParameterPrefix );
 
-            command.Parameters.Add( limitFrom, ( dataPage.PageIndex - 1 ) * dataPage.PageSize );
-            command.Parameters.Add( limitCount, dataPage.PageSize );
+            command.Parameters.Add( limitFrom, ( dataPage.PageIndex - 1 ) * dataPage.PageSize + 1 );
+            command.Parameters.Add( limitTo, dataPage.PageIndex * dataPage.PageSize );
 
-            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT {2}, {3}", command.ToString(), orderBy, limitFrom, limitCount );
+            string queryItemSql = string.Format( "select * from ( select *, row_number() over( order by {0} ) as RowNumber from ( {1} ) a ) t where RowNumber between {2} and {3} ", orderBy, command.ToString(), limitFrom, limitTo );
 
             dataPage.Data = this.ExecuteDataTable( new Restful.Data.SqlServer.CommandBuilders.SqlServerCommandBuilder( queryItemSql, command.Parameters ) );
             #endregion
@@ -91,7 +91,7 @@ namespace Restful.Data.SqlServer
         /// <returns></returns>
         public override T GetIdentifier<T>()
         {
-            return this.ExecuteScalar<T>( new Restful.Data.SqlServer.CommandBuilders.SqlServerCommandBuilder( "SELECT LAST_INSERT_ID();" ) );
+            return this.ExecuteScalar<T>( new Restful.Data.SqlServer.CommandBuilders.SqlServerCommandBuilder( "select @@identity" ) );
         }
 
         #endregion

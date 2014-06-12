@@ -12,6 +12,7 @@ using Restful.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Collections.Generic;
+using Restful.Data.SqlServer;
 
 namespace Restful.NUnitTests
 {
@@ -39,7 +40,8 @@ namespace Restful.NUnitTests
     {
         static SessionTest()
         {
-            SessionProviderFactories.Register<MySqlSessionProviderFactory>();
+//            SessionProviderFactories.Register<MySqlSessionProviderFactory>();
+            SessionProviderFactories.Register<SqlServerSessionProviderFactory>();
 
             //EntityHelper.CompileDynamicProxyTypes( typeof( Person ) );
         }
@@ -506,7 +508,8 @@ namespace Restful.NUnitTests
                 queryable = session.Find<Person>()
                     .Where( s => s.Id == id )
                     .Where( s => s.Name.Contains( "test" ) )
-                    .Where( s => ( s.Age == 20 || s.IsActive == true ) && s.Id == id )
+                    .OrderBy( s => s.CreateTime )
+                    .OrderBy( s => s.Name )
                     .Skip( 0 ).Take( 1 );
 
                 Assert.AreEqual( 1, queryable.Count() );
