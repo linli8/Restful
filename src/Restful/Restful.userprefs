@@ -1,0 +1,20 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench>
+    <Pads>
+      <Pad Id="MonoDevelop.NUnit.TestPad">
+        <State expanded="True" selected="True" />
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.ConsoleApp/ObjectExtensions.cs" line="9" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="563" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="546" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful/Reflection/Emit/DynamicHelper.cs" line="117" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful/Reflection/Emit/DynamicHelper.cs" line="136" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

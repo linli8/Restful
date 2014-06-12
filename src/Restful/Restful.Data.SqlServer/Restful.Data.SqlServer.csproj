@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E421F9CE-9BD9-4A85-8CF4-4919B013063E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Restful.Data.SqlServer</RootNamespace>
+    <AssemblyName>Restful.Data.SqlServer</AssemblyName>
+    <ReleaseVersion>2.0</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Remotion.Linq">
+      <HintPath>..\References\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="CommandBuilders\SqlServerCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerDeleteCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerInsertCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerLimitPartsAggregator.cs" />
+    <Compile Include="CommandBuilders\SqlServerOrderByPartsCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerQueryCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerSelectPartsCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerUpdateCommandBuilder.cs" />
+    <Compile Include="CommandBuilders\SqlServerWherePartsCommandBuilder.cs" />
+    <Compile Include="Linq\SqlServerDeleteable.cs" />
+    <Compile Include="Linq\SqlServerDeleteProvider.cs" />
+    <Compile Include="Linq\SqlServerInsertProvider.cs" />
+    <Compile Include="Linq\SqlServerInsetable.cs" />
+    <Compile Include="Linq\SqlServerQueryable.cs" />
+    <Compile Include="Linq\SqlServerQueryExecutor.cs" />
+    <Compile Include="Linq\SqlServerUpdateable.cs" />
+    <Compile Include="Linq\SqlServerUpdateProvider.cs" />
+    <Compile Include="Visitors\SqlServerOrderByClauseVisitor.cs" />
+    <Compile Include="Visitors\SqlServerQueryModelVisitor.cs" />
+    <Compile Include="Visitors\SqlServerSelectClauseVisitor.cs" />
+    <Compile Include="Visitors\SqlServerWhereClauseVisitor.cs" />
+    <Compile Include="SqlServerSession.cs" />
+    <Compile Include="SqlServerSessionProvider.cs" />
+    <Compile Include="SqlServerSessionProviderFactory.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="CommandBuilders\" />
+    <Folder Include="Common\" />
+    <Folder Include="Linq\" />
+    <Folder Include="Visitors\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Restful.Linq\Restful.Linq.csproj">
+      <Project>{39D214BE-3A4A-4174-8C53-5B7B5654D1AA}</Project>
+      <Name>Restful.Linq</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Restful.Data\Restful.Data.csproj">
+      <Project>{4BA05EF7-5312-4B37-B0A2-07E68DD05BEA}</Project>
+      <Name>Restful.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Restful\Restful.csproj">
+      <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
+      <Name>Restful</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

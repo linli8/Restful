@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4BA05EF7-5312-4B37-B0A2-07E68DD05BEA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Restful.Data</RootNamespace>
+    <AssemblyName>Restful.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <ReleaseVersion>2.0</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="Remotion.Linq">
+      <HintPath>..\References\Remotion.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.0\lib\net40-client\Castle.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attributes\AutoIncreaseAttribute.cs" />
+    <Compile Include="Dapper\SqlMapper.cs" />
+    <Compile Include="ISession.cs" />
+    <Compile Include="ISessionProvider.cs" />
+    <Compile Include="Attributes\PrimaryKeyAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ISessionProviderFactory.cs" />
+    <Compile Include="DataPage.cs" />
+    <Compile Include="CommandBuilder.cs" />
+    <Compile Include="CommandParameter.cs" />
+    <Compile Include="SessionFactory.cs" />
+    <Compile Include="SessionProvider.cs" />
+    <Compile Include="EntityInterceptor.cs" />
+    <Compile Include="EntityInterceptorFilter.cs" />
+    <Compile Include="EntityInterceptorSelector.cs" />
+    <Compile Include="EntityObject.cs" />
+    <Compile Include="EntityProxyNameScope.cs" />
+    <Compile Include="IEntityObject.cs" />
+    <Compile Include="SessionProviderFactories.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
+    <Compile Include="Extensions\PropertyInfoExtensions.cs" />
+    <Compile Include="Extensions\IDataReaderExtensions.cs" />
+    <Compile Include="Extensions\IUpdateableGenericExtensions.cs" />
+    <Compile Include="Extensions\ISessionExtensions.cs" />
+    <Compile Include="EntityHelper.cs" />
+    <Compile Include="SqlCommandBuilder.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\Restful\Restful.csproj">
+      <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
+      <Name>Restful</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Restful.Linq\Restful.Linq.csproj">
+      <Project>{39D214BE-3A4A-4174-8C53-5B7B5654D1AA}</Project>
+      <Name>Restful.Linq</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
