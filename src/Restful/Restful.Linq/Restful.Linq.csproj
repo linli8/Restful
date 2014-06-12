@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{39D214BE-3A4A-4174-8C53-5B7B5654D1AA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Restful.Linq</RootNamespace>
+    <AssemblyName>Restful.Linq</AssemblyName>
+    <ReleaseVersion>2.0</ReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IDeleteable.cs" />
+    <Compile Include="IDeleteProvider.cs" />
+    <Compile Include="IUpdateable.cs" />
+    <Compile Include="IInsertable.cs" />
+    <Compile Include="IInsertProvider.cs" />
+    <Compile Include="IUpdateProvider.cs" />
+    <Compile Include="Extensions\IDeleteableExtensions.cs" />
+    <Compile Include="Extensions\IDeleteableGenericExtensions.cs" />
+    <Compile Include="Extensions\IInsertableExtensions.cs" />
+    <Compile Include="Extensions\IInsertableGenericExtensions.cs" />
+    <Compile Include="Extensions\IUpdateableExtensions.cs" />
+    <Compile Include="Extensions\IUpdateableGenericExtensions.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Restful\Restful.csproj">
+      <Project>{ECEDCBF3-7039-4A01-B87A-DA84DA939404}</Project>
+      <Name>Restful</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+</Project>
