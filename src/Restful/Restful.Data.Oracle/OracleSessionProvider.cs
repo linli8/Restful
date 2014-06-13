@@ -67,12 +67,12 @@ namespace Restful.Data.Oracle
             #region 查询最终的结果集
 
             string limitFrom = string.Format( "{0}LimitFrom", Constants.ParameterPrefix );
-            string limitCount = string.Format( "{0}LimitCount", Constants.ParameterPrefix );
+            string limitTo = string.Format( "{0}LimitTo", Constants.ParameterPrefix );
 
-            command.Parameters.Add( limitFrom, ( dataPage.PageIndex - 1 ) * dataPage.PageSize );
-            command.Parameters.Add( limitCount, dataPage.PageSize );
+            command.Parameters.Add( limitFrom, ( dataPage.PageIndex - 1 ) * dataPage.PageSize + 1 );
+            command.Parameters.Add( limitTo, dataPage.PageIndex * dataPage.PageSize );
 
-            string queryItemSql = string.Format( "SELECT * FROM ( {0} ) T ORDER BY {1} LIMIT {2}, {3}", command.ToString(), orderBy, limitFrom, limitCount );
+            string queryItemSql = string.Format( "SELECT * FROM ( SELECT T.*, ROWNUM RN FROM ( {0} ) T ORDER BY {1} ) WHERE RN BETWEEN {2} AND {3}", command.ToString(), orderBy, limitFrom, limitTo );
 
             dataPage.Data = this.ExecuteDataTable( new Restful.Data.Oracle.CommandBuilders.OracleCommandBuilder( queryItemSql, command.Parameters ) );
             #endregion
@@ -91,7 +91,7 @@ namespace Restful.Data.Oracle
         /// <returns></returns>
         public override T GetIdentifier<T>()
         {
-            return this.ExecuteScalar<T>( new Restful.Data.Oracle.CommandBuilders.OracleCommandBuilder( "SELECT LAST_INSERT_ID();" ) );
+            throw new NotSupportedException( "Oracle 不支持。" );
         }
 
         #endregion

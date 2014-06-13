@@ -13,12 +13,12 @@ namespace Restful.Data.Oracle.Common
         /// <summary>
         /// 左引用符号
         /// </summary>
-        public const string LeftQuote = "`";
+        public const string LeftQuote = "";
 
         /// <summary>
         /// 右引用符号
         /// </summary>
-        public const string RightQuote = "`";
+        public const string RightQuote = "";
 
         /// <summary>
         /// 参数前缀

@@ -172,12 +172,13 @@ namespace Restful.Data.Oracle.Visitors
             }
             else if( resultOperator is CountResultOperator || resultOperator is LongCountResultOperator )
             {
-                this.commandBuilder.SelectPart = "count(*)";
+                this.commandBuilder.IsCount = true;
+                //this.commandBuilder.SelectPart = "count(*)";
             }
             else if( resultOperator is FirstResultOperator || resultOperator is SingleResultOperator )
             {
-                this.commandBuilder.LimitParts.From = 0;
-                this.commandBuilder.LimitParts.Count = 1;
+                //this.commandBuilder.LimitParts.From = 0;
+                //this.commandBuilder.LimitParts.Count = 1;
             }
             else if( resultOperator is DistinctResultOperator )
             {

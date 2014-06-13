@@ -37,7 +37,7 @@ namespace Restful.Data.Oracle.CommandBuilders
 
             if( string.IsNullOrEmpty( this.WhereParts ) == false )
             {
-                builder.AppendFormat( "where {0};", this.WhereParts );
+                builder.AppendFormat( "where {0}", this.WhereParts );
             }
 
             return builder.ToString();

@@ -1,49 +1,48 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
+using System.Linq.Expressions;
+using System.Reflection;
 using NUnit.Framework;
 using Restful.Data;
 using Restful.Data.Attributes;
 using Restful.Data.MySql;
 using Restful.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using System.Collections.Generic;
-using Restful.Data.SqlServer;
 
 namespace Restful.NUnitTests
 {
-    #region Person
-    [Serializable]
-    public class Person
-    {
-        [PrimaryKey, AutoIncrease]
-        public virtual int Id { get; set; }
-
-        public virtual string Name { get; set; }
-
-        public virtual int? Age { get; set; }
-
-        public virtual decimal? Money { get; set; }
-
-        public virtual DateTime CreateTime { get; set; }
-
-        public virtual bool IsActive { get; set; }
-    }
-    #endregion
 
     [TestFixture()]
-    public class SessionTest
+    public class MySqlSessionTest
     {
-        static SessionTest()
-        {
-//            SessionProviderFactories.Register<MySqlSessionProviderFactory>();
-            SessionProviderFactories.Register<SqlServerSessionProviderFactory>();
 
-            //EntityHelper.CompileDynamicProxyTypes( typeof( Person ) );
+        #region Person
+
+        [Serializable]
+        public class Person
+        {
+            [PrimaryKey, AutoIncrease]
+            public virtual int Id { get; set; }
+
+            public virtual string Name { get; set; }
+
+            public virtual int? Age { get; set; }
+
+            public virtual decimal? Money { get; set; }
+
+            public virtual DateTime CreateTime { get; set; }
+
+            public virtual bool IsActive { get; set; }
+        }
+
+        #endregion
+
+        static MySqlSessionTest()
+        {
+            SessionProviderFactories.Register<MySqlSessionProviderFactory>();
+            SessionFactory.Default = "MySql";
         }
 
         #region Clear

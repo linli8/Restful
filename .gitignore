@@ -2,3 +2,5 @@ debug
 obj
 *.user
 *.suo
+*.mdb
+*.pdb

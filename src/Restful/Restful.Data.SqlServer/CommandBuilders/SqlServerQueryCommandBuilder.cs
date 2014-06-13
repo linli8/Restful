@@ -86,8 +86,6 @@ namespace Restful.Data.SqlServer.CommandBuilders
 
         private string OnNonPageQuery()
         {
-            string sql = string.Empty;
-
             var builder = new StringBuilder();
 
             builder.Append( "select " );

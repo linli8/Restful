@@ -31,7 +31,7 @@ namespace Restful.Data.Oracle.CommandBuilders
 
             builder.AppendFormat( "insert into {0}{1}{2} ", Constants.LeftQuote, this.tableName, Constants.RightQuote );
             builder.AppendFormat( "( {0} ) ", string.Join( ", ", this.columns ) );
-            builder.AppendFormat( "values ( {0} );", string.Join( ", ", this.parameters.Keys ) );
+            builder.AppendFormat( "values ( {0} )", string.Join( ", ", this.parameters.Keys ) );
 
             return builder.ToString();
         }
