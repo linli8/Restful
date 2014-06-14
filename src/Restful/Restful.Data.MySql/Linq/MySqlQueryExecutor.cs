@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.Common;
 using Remotion.Linq;
 using Restful.Data.MySql.Visitors;
+using System;
 
 namespace Restful.Data.MySql.Linq
 {
@@ -84,9 +85,20 @@ namespace Restful.Data.MySql.Linq
 
             using( IDataReader reader = this.provider.ExecuteDataReader( command ) )
             {
-                if( reader.Read() == false && returnDefaultWhenEmpty )
+                bool isExists = reader.Read();
+
+                // 如果不存在查询记录
+                if( isExists == false )
                 {
-                    return default( T );
+                    // 如果可以默认
+                    if( returnDefaultWhenEmpty )
+                    {
+                        return default( T );
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException( "未查询出满足条件的任何记录。" );
+                    }
                 }
 
                 var tuple = reader.GetDeserializerState<T>();

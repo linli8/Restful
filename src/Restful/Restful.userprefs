@@ -1,13 +1,27 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Restful.NUnitTests/OracleSessionTest .cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Restful.Data.SqlServer/Linq/SqlServerQueryExecutor.cs">
     <Files>
-      <File FileName="Restful.NUnitTests/MySqlSessionTest.cs" Line="8" Column="7" />
-      <File FileName="Restful.NUnitTests/OracleSessionTest .cs" Line="201" Column="14" />
+      <File FileName="Restful.NUnitTests/MySqlSessionTest.cs" Line="529" Column="10" />
+      <File FileName="Restful.NUnitTests/app.config" Line="8" Column="23" />
+      <File FileName="Restful.Data.MySql/Visitors/MySqlQueryModelVisitor.cs" Line="12" Column="2" />
+      <File FileName="Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" Line="88" Column="17" />
+      <File FileName="Restful.Data.Oracle/Linq/OracleQueryExecutor.cs" Line="98" Column="25" />
+      <File FileName="Restful.Data.SqlServer/Linq/SqlServerQueryExecutor.cs" Line="96" Column="45" />
     </Files>
     <Pads>
       <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State expanded="True" selected="True" />
+        <State expanded="True">
+          <Node name="Restful.NUnitTests" expanded="True">
+            <Node name="Restful" expanded="True">
+              <Node name="NUnitTests" expanded="True">
+                <Node name="MySqlSessionTest" expanded="True">
+                  <Node name="Test" selected="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
+        </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
@@ -20,6 +34,8 @@
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful/Reflection/Emit/DynamicHelper.cs" line="136" column="1" />
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.Data.SqlServer/SqlServerSessionProvider.cs" line="75" column="1" />
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="395" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" line="91" column="1" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/MySqlSessionTest.cs" line="529" column="20" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

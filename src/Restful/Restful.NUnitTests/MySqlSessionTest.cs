@@ -527,71 +527,19 @@ namespace Restful.NUnitTests
         [Test]
         public void Test()
         {
-            var p1 = new Person();
-            var p2 = new Person();
 
-            p1.Name = "test";
-            p1.Age = 20;
-            p1.Money = 100;
-            p1.CreateTime = DateTime.Now;
-            p1.IsActive = false;
-
-            PropertyInfo[] properties = typeof( Person ).GetProperties( BindingFlags.Public | BindingFlags.Instance );
-
-            IList<Expression> expressions = new List<Expression>();
-
-            var target = Expression.Parameter( typeof( object ) );
-            var source = Expression.Parameter( typeof( object ) );
-
-            foreach( PropertyInfo property in properties )
+            using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                var castTarget = Expression.Convert( target, property.DeclaringType );
-                var castSource = Expression.Convert( source, property.DeclaringType );
+                // 测试包含多个 Where 条件
+                var queryable = session.Find<Person>()
+                    .Where( s => s.Name.Contains( "test02" ) )
+                    .Select( s => new { UserName = s.Name } );
 
-                var targetProperty = Expression.Property( castTarget, property );
-                var sourceProperty = Expression.Property( castSource, property );
+                var person = queryable.First();
+                //Assert.AreEqual( 1, queryable.Count() );
 
-                var assign = Expression.Assign( targetProperty, sourceProperty );
-
-                expressions.Add( assign );
+                Console.WriteLine( session.Provider.ExecutedCommandBuilder );
             }
-
-            Expression block = Expression.Block( expressions );
-
-            var handler = Expression.Lambda<Action<object, object>>( block, target, source ).Compile();
-
-            handler( p2, p1 );
-
-            Console.WriteLine( p2.Name );
-
-            BlockExpression blockExpr = 
-                Expression.Block(
-                    Expression.Call(
-                        null,
-                        typeof( Console ).GetMethod( "Write", new Type[] { typeof( String ) } ),
-                        Expression.Constant( "Hello " )
-                    ),
-                    Expression.Call(
-                        null,
-                        typeof( Console ).GetMethod( "WriteLine", new Type[] { typeof( String ) } ),
-                        Expression.Constant( "World!" )
-                    ),
-                    Expression.Constant( 42 )
-                );
-
-            Console.WriteLine( "The result of executing the expression tree:" );
-            // The following statement first creates an expression tree,
-            // then compiles it, and then executes it.           
-            var result = Expression.Lambda<Func<int>>( blockExpr ).Compile()();
-
-            Console.WriteLine( "The expressions from the block expression:" );
-            foreach( var expr in blockExpr.Expressions )
-                Console.WriteLine( expr.ToString() );
-
-            // Print out the result of the tree execution.
-            Console.WriteLine( "The return value of the block expression:" );
-
-            Console.WriteLine( result );
         }
 
         #endregion
