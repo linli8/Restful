@@ -11,5 +11,11 @@ namespace Restful.Data
         /// 获取 Session 提供程序
         /// </summary>
         ISessionProvider Provider { get; }
+
+        /// <summary>
+        /// 获取和设置执行 SQL 命令的超时时间，单位秒
+        /// </summary>
+        /// <value>The timeout.</value>
+        int CommandTimeout { get; set; }
     }
 }

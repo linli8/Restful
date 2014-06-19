@@ -23,6 +23,12 @@ namespace Restful.Data
         /// <value>The current sql cmd.</value>
         CommandBuilder ExecutedCommandBuilder { get; set; }
 
+        /// <summary>
+        /// 获取和设置执行 SQL 命令的超时时间，单位秒
+        /// </summary>
+        /// <value>The timeout.</value>
+        int CommandTimeout { get; set; }
+
         #region Transaction
 
         /// <summary>

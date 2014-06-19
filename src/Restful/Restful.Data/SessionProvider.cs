@@ -23,6 +23,7 @@ namespace Restful.Data
         private ISessionProviderFactory factory;
         private bool disposed;
         private string connectionStr;
+        private int commandTimeout;
 
         protected DbConnection connection;
         protected DbTransaction transaction;
@@ -68,6 +69,21 @@ namespace Restful.Data
             }
         }
 
+        public int CommandTimeout
+        {
+            get
+            {
+                return this.commandTimeout;
+            }
+            set
+            {
+                if( value <= 0 )
+                    throw new ArgumentOutOfRangeException( "执行SQL命令的超时时间必须大于 0 。" );
+
+                this.commandTimeout = value;
+            }
+        }
+
         #endregion
 
         #region SessionProvider
@@ -78,6 +94,7 @@ namespace Restful.Data
         /// <param name="connectionStr"></param>
         public SessionProvider( ISessionProviderFactory factory, string connectionStr )
         {
+            this.commandTimeout = 30;
             this.factory = factory;
             this.connectionStr = connectionStr;
             this.connection = this.factory.CreateConnection( this.connectionStr );
@@ -139,6 +156,28 @@ namespace Restful.Data
 
         #endregion
 
+        #region CreateSqlCommand
+
+        /// <summary>
+        /// 创建 SQL 执行命令
+        /// </summary>
+        /// <returns>The sql command.</returns>
+        /// <param name="builder">Builder.</param>
+        protected DbCommand CreateSqlCommand( CommandBuilder builder )
+        {
+            DbCommand command = connection.CreateCommand();
+
+            command.CommandText = builder.ToString();
+            command.Transaction = this.transaction;
+            command.CommandTimeout = this.CommandTimeout;
+
+            this.PrepareParameter( command, builder.Parameters );
+
+            return command;
+        }
+
+        #endregion
+
         #region Transaction
 
         /// <summary>
@@ -162,13 +201,8 @@ namespace Restful.Data
         /// <typeparam name="T">返回类型</typeparam>
         public virtual T ExecuteScalar<T>( CommandBuilder builder )
         {
-            using( DbCommand command = connection.CreateCommand() )
+            using( DbCommand command = this.CreateSqlCommand( builder ) )
             {
-                command.CommandText = builder.ToString();
-                command.Transaction = this.transaction;
-
-                this.PrepareParameter( command, builder.Parameters );
-
                 return command.ExecuteScalar().Cast<T>();
             }
         }
@@ -184,13 +218,8 @@ namespace Restful.Data
         /// <returns>DataReader 对象</returns>
         public virtual IDataReader ExecuteDataReader( CommandBuilder builder )
         {
-            using( DbCommand command = connection.CreateCommand() )
+            using( DbCommand command = this.CreateSqlCommand( builder ) )
             {
-                command.CommandText = builder.ToString();
-                command.Transaction = this.transaction;
-
-                this.PrepareParameter( command, builder.Parameters );
-
                 return command.ExecuteReader();
             }
         }
@@ -206,13 +235,8 @@ namespace Restful.Data
         /// <returns>DataTable 对象</returns>
         public virtual DataTable ExecuteDataTable( CommandBuilder builder )
         {
-            using( DbCommand command = connection.CreateCommand() )
+            using( DbCommand command = this.CreateSqlCommand( builder ) )
             {
-                command.CommandText = builder.ToString();
-                command.Transaction = transaction;
-
-                this.PrepareParameter( command, builder.Parameters );
-
                 using( DbDataAdapter adapter = this.factory.CreateDataAdapter() )
                 {
                     adapter.SelectCommand = command;
@@ -237,13 +261,8 @@ namespace Restful.Data
         /// <returns>DataSet 对象</returns>
         public virtual DataSet ExecuteDataSet( CommandBuilder builder )
         {
-            using( DbCommand command = connection.CreateCommand() )
+            using( DbCommand command = this.CreateSqlCommand( builder ) )
             {
-                command.CommandText = builder.ToString();
-                command.Transaction = this.transaction;
-
-                this.PrepareParameter( command, builder.Parameters );
-
                 using( DbDataAdapter adapter = this.factory.CreateDataAdapter() )
                 {
                     adapter.SelectCommand = command;
@@ -269,13 +288,8 @@ namespace Restful.Data
         /// <param name="parameters">Parameters.</param>
         public virtual int ExecuteNonQuery( CommandBuilder builder )
         {
-            using( DbCommand command = connection.CreateCommand() )
+            using( DbCommand command = this.CreateSqlCommand( builder ) )
             {
-                command.CommandText = builder.ToString();
-                command.Transaction = this.transaction;
-
-                this.PrepareParameter( command, builder.Parameters );
-
                 return command.ExecuteNonQuery();
             }
         }
@@ -296,6 +310,7 @@ namespace Restful.Data
                 command.CommandText = storedProcedureName;
                 command.CommandType = CommandType.StoredProcedure;
                 command.Transaction = this.transaction;
+                command.CommandTimeout = this.CommandTimeout;
 
                 if( parameters != null && parameters.Count > 0 )
                 {

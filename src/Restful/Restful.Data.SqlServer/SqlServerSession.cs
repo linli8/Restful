@@ -14,6 +14,18 @@ namespace Restful.Data.SqlServer
             this.provider = new SqlServerSessionProvider( factory, connectionStr );
         }
 
+        public int CommandTimeout
+        {
+            get
+            {
+                return this.provider.CommandTimeout;
+            }
+            set
+            {
+                this.provider.CommandTimeout = value;
+            }
+        }
+
         public ISessionProvider Provider
         {
             get { return this.provider; }

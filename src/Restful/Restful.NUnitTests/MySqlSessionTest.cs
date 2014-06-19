@@ -10,6 +10,8 @@ using Restful.Data;
 using Restful.Data.Attributes;
 using Restful.Data.MySql;
 using Restful.Linq;
+using System.Data;
+using System.Data.Common;
 
 namespace Restful.NUnitTests
 {
@@ -236,7 +238,7 @@ namespace Restful.NUnitTests
         [Test()]
         public void Insert()
         {
-            // 新增时，对象务必使用 EntityProxyGenerator 创建实体代理，否则无法跟踪属性变化
+            // 新增时，对象务必使用 EntityHelper 创建实体代理，否则无法跟踪属性变化
             var person = EntityHelper.CreateProxy<Person>();
 
             person.Name = "test";
@@ -247,6 +249,7 @@ namespace Restful.NUnitTests
 
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
+                // 直接插入实体
                 int i = session.Insert( person );
 
                 // 输出生成的SQL语句
@@ -257,6 +260,7 @@ namespace Restful.NUnitTests
                 Assert.AreEqual( 1, i );
                 Assert.Greater( id, 0 );
 
+                // Lambda 表达式插入
                 i = session.Insert<Person>()
                     .Set( s => s.Name, "test" )
                     .Set( s => s.Age, 20 )
@@ -527,18 +531,29 @@ namespace Restful.NUnitTests
         [Test]
         public void Test()
         {
-
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                // 测试包含多个 Where 条件
-                var queryable = session.Find<Person>()
-                    .Where( s => s.Name.Contains( "test02" ) )
-                    .Select( s => new { UserName = s.Name } );
+                // 无参数查询
+                var dt1 = session.ExecuteDataTable( "select * from Person" );
 
-                var person = queryable.First();
-                //Assert.AreEqual( 1, queryable.Count() );
+                // 匿名参数查询
+                var dt2 = session.ExecuteDataTable( "select * from Person where Id = ?", 1 );
 
-                Console.WriteLine( session.Provider.ExecutedCommandBuilder );
+                // 匿名参数查询
+                IList<object> values = new List<object>();
+
+                values.Add( 1 );
+                values.Add( DateTime.Now );
+
+                var dt3 = session.ExecuteDataTable( "select * from Person where Id = ? and CreateTime < ?", values );
+
+                // 命名参数查询
+                IDictionary<string,object> parameters = new Dictionary<string,object>();
+
+                parameters.Add( "@Id", 1 );
+                parameters.Add( "@CreateTime", DateTime.Now );
+
+                var dt4 = session.ExecuteDataTable( "select * from Person where Id = @Id and CreateTime < @CreateTime", parameters );
             }
         }
 
