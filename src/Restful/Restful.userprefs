@@ -1,15 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Restful.NUnitTests/MySqlSessionTest.cs">
-    <Files>
-      <File FileName="Restful.NUnitTests/MySqlSessionTest.cs" Line="553" Column="44" />
-      <File FileName="Restful.NUnitTests/app.config" Line="1" Column="1" />
-      <File FileName="Restful.Data.MySql/Visitors/MySqlQueryModelVisitor.cs" Line="1" Column="1" />
-      <File FileName="Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" Line="1" Column="1" />
-      <File FileName="Restful.Data.Oracle/Linq/OracleQueryExecutor.cs" Line="1" Column="1" />
-      <File FileName="Restful.Data.SqlServer/Linq/SqlServerQueryExecutor.cs" Line="1" Column="1" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.ConsoleApp/ObjectExtensions.cs" line="9" column="1" />
@@ -20,7 +11,7 @@
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.Data.SqlServer/SqlServerSessionProvider.cs" line="75" column="1" />
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/SessionTest.cs" line="395" column="1" />
       <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.Data.MySql/Linq/MySqlQueryExecutor.cs" line="91" column="1" />
-      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/MySqlSessionTest.cs" line="533" column="20" />
+      <Breakpoint file="/Users/zhaogh/Documents/技术研究/Restful/src/Restful/Restful.NUnitTests/MySqlSessionTest.cs" line="537" column="20" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -21,7 +21,6 @@ namespace Restful.Data
         #region Members
 
         private static ProxyGenerator generator;
-        private static ProxyGenerationOptions options;
 
         #endregion
 
@@ -32,10 +31,6 @@ namespace Restful.Data
             var scope = new ModuleScope( false, false, new EntityProxyNameScope(), ASSEMBLY_NAME, MODULE_PATH, ASSEMBLY_NAME, MODULE_PATH );
             
             generator = new ProxyGenerator( new DefaultProxyBuilder( scope ) );
-
-            options = new ProxyGenerationOptions( new EntityInterceptorFilter() ) { Selector = new EntityInterceptorSelector() };
-
-            options.AddMixinInstance( new EntityObject() );
         }
 
         #endregion
@@ -49,7 +44,15 @@ namespace Restful.Data
         /// <param name="type">类型</param>
         public static object CreateProxy( Type @type )
         {
-            return generator.CreateClassProxy( @type, options, new EntityInterceptor() );
+            ProxyGenerationOptions options = new ProxyGenerationOptions( new EntityInterceptorFilter() ) { Selector = new EntityInterceptorSelector() };
+
+            options.AddMixinInstance( new EntityObject() );
+
+            object target = generator.CreateClassProxy( @type, options, new EntityInterceptor() );
+
+            ( (IEntityObject)target ).Reset();
+
+            return target;
         }
 
         /// <summary>

@@ -533,27 +533,10 @@ namespace Restful.NUnitTests
         {
             using( ISession session = SessionFactory.CreateDefaultSession() )
             {
-                // 无参数查询
-                var dt1 = session.ExecuteDataTable( "select * from Person" );
+                var persons = from s in  session.Find<Person>()
+                                          select new Person(){ Id = s.Id, Name = s.Name, Age = s.Age };
 
-                // 匿名参数查询
-                var dt2 = session.ExecuteDataTable( "select * from Person where Id = ?", 1 );
-
-                // 匿名参数查询
-                IList<object> values = new List<object>();
-
-                values.Add( 1 );
-                values.Add( DateTime.Now );
-
-                var dt3 = session.ExecuteDataTable( "select * from Person where Id = ? and CreateTime < ?", values );
-
-                // 命名参数查询
-                IDictionary<string,object> parameters = new Dictionary<string,object>();
-
-                parameters.Add( "@Id", 1 );
-                parameters.Add( "@CreateTime", DateTime.Now );
-
-                var dt4 = session.ExecuteDataTable( "select * from Person where Id = @Id and CreateTime < @CreateTime", parameters );
+                persons.ToList();
             }
         }
 

@@ -92,7 +92,7 @@ namespace Restful.Data.MySql.Visitors
 
             visitor.Translate( selectClause.Selector, selectBuilder );
 
-            commandBuilder.SelectPart = selectBuilder.ToString();
+            commandBuilder.SelectPart = selectBuilder.ToString().TrimEnd( ' ', ',' );
 
             base.VisitSelectClause( selectClause, queryModel );
         }

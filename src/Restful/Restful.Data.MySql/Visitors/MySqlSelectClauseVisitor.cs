@@ -136,7 +136,7 @@ namespace Restful.Data.MySql.Visitors
                         break;
                 }
 
-                this.commandBuilder.SelectPartsBuilder.AppendFormat( " as {0}{1}{2}", Constants.LeftQuote, binding.Member.Name, Constants.RightQuote );
+                this.commandBuilder.SelectPartsBuilder.AppendFormat( " as {0}{1}{2}, ", Constants.LeftQuote, binding.Member.Name, Constants.RightQuote );
             }
 
             return expression;
